@@ -1,6 +1,6 @@
-# sagartamang.com
+# Jey.com
 
-This is the source code for the official website of **Sagar Tamang**. It serves as a personal portfolio, blog, and playground for my web experiments.
+This is the source code for the official website of **Jey**. It serves as a personal portfolio, blog, and playground for my web experiments.
 
 <img src="./public/ss.png" alt="Website Screenshot" width="100%" />
 
