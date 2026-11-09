@@ -1,0 +1,66 @@
+---
+title: 'YOLO11 Airborne Object Detection & Tactical Radar'
+publishedAt: '2026-03-30'
+summary: 'An Ultralytics YOLO11 vision model trained on 8,888 aerial images to classify aircraft, birds, and drones, mitigating avian false alarms for perimeter security, accompanied by a real-time 2D tactical radar display.'
+image: '/projects/yolo-airborne.png'
+tech: 'Python, PyTorch, Ultralytics YOLO11, Computer Vision'
+---
+
+## Overview
+
+Low-altitude airspace monitoring, counter-UAS (unmanned aerial system) defense, and perimeter surveillance face a critical false-positive challenge: **distinguishing small commercial quadcopters from flying birds at distance under variable atmospheric lighting**.
+
+This project trains and deploys an **Ultralytics YOLO11** deep convolutional model specifically optimized for aerial object discrimination, coupled with an interactive 2D tactical radar display interface and an optional microcontroller-based ultrasonic hardware trigger.
+
+- **GitHub Repository**: [https://github.com/JeyaVardhan-L/Train_YOLO_Customdataset](https://github.com/JeyaVardhan-L/Train_YOLO_Customdataset)
+- **Primary Framework**: Python, PyTorch, Ultralytics YOLO11
+- **Dataset Size**: 8,888 aerial images across 15,018 normalized annotations
+
+---
+
+## Dataset Architecture
+
+The model is trained on a rigorously partitioned aerial surveillance dataset designed to isolate silhouettes against clear, overcast, and backlit sky environments:
+
+| Class ID | Target Class | Train Instances | Validation Instances | Total Annotations | Operational Objective |
+| :---: | :--- | :---: | :---: | :---: | :--- |
+| `0` | **Aircrafts** | 4,025 | 977 | 5,002 | Fixed-wing airplanes, airliners, military jets, helicopters |
+| `1` | **Bird** | 3,826 | 1,159 | 4,985 | Avian wildlife in varied soaring and flapping profiles (negative control) |
+| `2` | **Drone** | 4,073 | 958 | 5,031 | Commercial quadcopters, hexacopters, custom multi-rotor UAVs |
+| **Total** | | **11,924** | **3,094** | **15,018** | **8,888 Total Images** |
+
+- **Partition**: 80% Training (7,110 images) / 20% Validation (1,778 images).
+
+---
+
+## Model Pipeline & Engineering Features
+
+```
+[ Video / Camera Stream ] 
+           │
+           ▼
+[ YOLO11 Neural Network ]  ──>  Bounding Box + Multi-Class Softmax
+           │
+           ├──────────────────────────────┐
+           ▼                              ▼
+[ 2D Tactical Radar GUI ]      [ Hardware Serial Trigger ]
+(Polar coordinate mapping,     (Arduino / ESP32 ultrasonic
+ bearing, range estimation)     target distance verification)
+```
+
+### 1. Avian False-Positive Suppression
+Standard general-purpose object detectors (like COCO pre-trained models) lack sufficient bird silhouette diversity, frequently misidentifying distant pigeons or raptors as hostile drones. By balancing 4,985 bird instances against 5,031 drone instances, the decision boundary explicitly isolates rotary propeller geometry and wing flexure.
+
+### 2. Live 2D Tactical Radar Interface
+The inference pipeline translates bounding box screen coordinates and optical center deltas into polar coordinates ($r, \theta$), rendering detected targets on an active tactical radar sweep HUD in real time.
+
+### 3. Microcontroller Ultrasonic Hardware Integration
+Includes optional integration with an Arduino or STM32 microcontroller over USB serial. When a detected drone breaches an angular threat corridor, the vision engine queries the ultrasonic sensor for physical distance validation before triggering alerts.
+
+---
+
+## Verification & Status
+
+- **Status**: Implemented, trained, and verified across image, video, and webcam inference modes.
+- **Inference Speed**: Real-time inference capable of >45 FPS on CUDA-enabled GPUs and >20 FPS on CPU with INT8 quantization.
+
