@@ -1,8 +1,9 @@
 import { ImageResponse } from 'next/og'
+import { PROFILE } from 'app/data/profile'
 
 export function GET(request: Request) {
   let url = new URL(request.url)
-  let title = url.searchParams.get('title') || 'sagar_builds — Sagar Tamang'
+  let title = url.searchParams.get('title') || `${PROFILE.name} — ${PROFILE.title}`
 
   return new ImageResponse(
     (
@@ -12,7 +13,7 @@ export function GET(request: Request) {
       >
         <div tw="flex flex-col">
           <div tw="flex items-center mb-4">
-            <span tw="text-lg text-neutral-400">sagartamang.com</span>
+            <span tw="text-lg text-neutral-400">{PROFILE.handle} / Engineering Portfolio</span>
           </div>
           <h2 tw="flex flex-col text-5xl font-bold tracking-tight text-left leading-tight">
             {title}
@@ -20,8 +21,8 @@ export function GET(request: Request) {
         </div>
         <div tw="flex items-center justify-between w-full">
           <div tw="flex items-center">
-            <span tw="text-2xl font-bold text-white">@sagar_builds</span>
-            <span tw="text-xl text-neutral-400 ml-4">AI Engineer · Builder · Creator</span>
+            <span tw="text-2xl font-bold text-white">{PROFILE.name}</span>
+            <span tw="text-xl text-neutral-400 ml-4">Systems · Robotics · XR · Embedded</span>
           </div>
         </div>
       </div>

@@ -100,7 +100,7 @@ const WritingPreviewCard = ({ title, date, slug }: WritingPreviewCardProps) => {
       ))}
 
       <text x={PREVIEW_WIDTH - 12} y={PREVIEW_HEIGHT - 10} textAnchor="end" fontSize="8" fill="rgba(255,255,255,0.45)">
-        sagartamang.com
+        jeyavardhan.dev
       </text>
     </svg>
   )

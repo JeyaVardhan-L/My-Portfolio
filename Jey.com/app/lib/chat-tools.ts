@@ -8,9 +8,8 @@ export const chatTools = {
   // No execute — the client renders this tool call as a button.
   showLinkButton: tool({
     description:
-      "Display a clickable button that opens one of Sagar's profiles or pages. " +
-      "Call this whenever the user asks for a social profile (Instagram, X, GitHub, LinkedIn, Google Scholar), " +
-      "his resume, his email, or to book a call with him.",
+      "Display a clickable button that opens one of Jeya's GitHub repositories, " +
+      "his GitHub profile, his project list, or RSS feed.",
     inputSchema: z.object({
       target: z.enum(PROFILE_LINK_KEYS),
     }),

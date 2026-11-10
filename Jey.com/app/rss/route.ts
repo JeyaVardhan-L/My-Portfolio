@@ -1,5 +1,6 @@
 import { baseUrl } from 'app/sitemap'
 import { getBlogPosts } from 'app/blog/utils'
+import { PROFILE } from 'app/data/profile'
 
 function escapeXml(unsafe: string): string {
   return unsafe.replace(/[<>&'"]/g, function (c) {
@@ -40,9 +41,9 @@ export async function GET() {
   const rssFeed = `<?xml version="1.0" encoding="UTF-8" ?>
   <rss version="2.0">
     <channel>
-        <title>sagar_builds — Sagar Tamang's Blog</title>
+        <title>${escapeXml(PROFILE.name)} — Engineering Notes & Systems Logs</title>
         <link>${baseUrl}</link>
-        <description>Technical tutorials, build logs, and AI engineering insights by Sagar Tamang (@sagar_builds). AI on Android, MCP servers, Python, Next.js, and more.</description>
+        <description>Technical writeups, robotics research feasibility, systems programming in C, and engineering builds by ${escapeXml(PROFILE.name)}.</description>
         ${itemsXml}
     </channel>
   </rss>`

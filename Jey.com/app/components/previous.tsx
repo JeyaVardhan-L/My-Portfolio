@@ -1,52 +1,38 @@
-import Image from "next/image"
-import { HoverLinkPreview } from "./hover-link-preview"
+import { TIMELINE } from "app/data/experience"
 
 const Previous = () => {
   return (
-    <section>
+    <section id="engineering-disciplines">
       <div className="flex flex-col gap-figma-inside-gap">
-        <h2 className="font-semibold italic">
-          Previous
+        <h2 className="font-semibold italic text-base">
+          Core Engineering Disciplines
         </h2>
 
-        <div className="flex items-center justify-start gap-2">
-          <Image src={"/leapx-ai-favicon.svg"} alt="leapx-ai-favicon" height={10} width={10} />
-          <p>
-            <HoverLinkPreview
-              href="https://leapx.ai/"
-              previewImage="/previews/leapx.webp"
-              imageAlt="LeapX.ai preview"
-              className="underline hover:decoration-muted-foreground underline-offset-4"
-            >leapx.ai</HoverLinkPreview>
-            {' '} ~ ai engineer intern [gurgaon, india]
-          </p>
-        </div>
-
-        <div className="flex items-center justify-start gap-2">
-          <Image src={"/composio-dev-favicon.svg"} alt="composio-dev-favicon" height={12} width={12} />
-          <p>
-            <HoverLinkPreview
-              href="https://composio.dev/"
-              previewImage="/previews/composio.webp"
-              imageAlt="Composio.dev preview"
-              className="underline hover:decoration-muted-foreground underline-offset-4"
-            >composio.dev</HoverLinkPreview>
-            {' '} ~ software engineering (python) [bangalore, india]
-          </p>
-        </div>
-
-        {/* <div className="flex items-center justify-start gap-2">
-          <Image src={"/successscholar-favicon.svg"} alt="successscholar-favicon" height={10} width={10} />
-          <p>
-            <HoverLinkPreview
-              href="https://successscholar.in/"
-              previewImage="/previews/successscholar.webp"
-              imageAlt="SuccessScholar.in preview"
-              className="underline hover:decoration-muted-foreground underline-offset-4"
-            >successscholar.in</HoverLinkPreview>
-            {' '} ~ product owner/developer [kolkata, india]
-          </p>
-        </div> */}
+        {TIMELINE.map((item, index) => (
+          <div key={index} className="flex flex-col gap-1 border-l border-border pl-3 py-1">
+            <div className="flex justify-between items-baseline">
+              <h3 className="font-medium text-foreground tracking-tight">
+                {item.title.toLowerCase()}
+              </h3>
+              <span className="text-xs text-muted-foreground tabular-nums">
+                {item.period}
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {item.organization} — {item.location}
+            </p>
+            <p className="text-sm text-neutral-300 mt-1">
+              {item.description}
+            </p>
+            {item.highlights && (
+              <ul className="list-disc pl-4 text-xs text-muted-foreground space-y-0.5 mt-1">
+                {item.highlights.map((h, i) => (
+                  <li key={i}>{h}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
       </div>
     </section>
   )

@@ -5,40 +5,41 @@ import Writings from './components/writings'
 import Builds from './components/builds'
 import Contact from './components/contact'
 import { baseUrl } from './sitemap'
+import { PROFILE } from './data/profile'
 
 export default function Page() {
   const personJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: 'Sagar Tamang',
-    alternateName: ['sagar_builds', 'sagar builds', '@sagar_builds'],
+    name: PROFILE.name,
+    alternateName: [PROFILE.fullName, PROFILE.handle, `@${PROFILE.handle}`],
     url: baseUrl,
     image: `${baseUrl}/icon.png`,
-    jobTitle: 'AI Engineer',
-    worksFor: {
-      '@type': 'Organization',
-      name: 'TwoSpoon.ai',
-      url: 'https://twospoon.ai/',
-    },
-    alumniOf: [
-      { '@type': 'EducationalOrganization', name: 'IIT Patna' },
-      { '@type': 'EducationalOrganization', name: 'IIIT Ranchi' },
-    ],
+    jobTitle: PROFILE.title,
     knowsAbout: [
-      'Artificial Intelligence', 'Machine Learning', 'Full Stack Development',
-      'Python', 'Next.js', 'Django', 'LLM', 'Generative AI', 'MCP Servers',
+      'Systems Programming',
+      'C Programming',
+      'Operating Systems',
+      'Linux Internals',
+      'Robotics',
+      'Autonomous Navigation',
+      'Embedded Systems',
+      'STM32',
+      'Computer Vision',
+      'Ultralytics YOLO',
+      'Virtual Reality',
+      'Khronos OpenXR',
+      'Unity Engine',
+      'TypeScript',
+      'Python',
     ],
     sameAs: [
-      'https://x.com/sagar_builds',
-      'https://www.instagram.com/sagar_builds/',
-      'https://github.com/SAGAR-TAMANG',
-      'https://www.linkedin.com/in/sagar-tmg/',
-      'https://scholar.google.com/citations?hl=en&user=3mS0Y4wAAAAJ',
+      PROFILE.githubUrl,
     ],
   }
 
   return (
-    <div className='flex flex-col gap-figma-outside-gap'>
+    <div className="flex flex-col gap-figma-outside-gap">
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -46,9 +47,9 @@ export default function Page() {
       />
       <MainHeader />
       <Current />
-      <Previous />
-      <Writings />
       <Builds />
+      <Writings />
+      <Previous />
       <Contact />
     </div>
   )

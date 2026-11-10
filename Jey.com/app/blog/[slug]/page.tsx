@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { CustomMDX } from 'app/components/mdx'
 import { formatDate, getBlogPosts } from 'app/blog/utils'
 import { baseUrl } from 'app/sitemap'
+import { PROFILE } from 'app/data/profile'
 
 export async function generateStaticParams() {
   let posts = getBlogPosts()
@@ -11,8 +12,8 @@ export async function generateStaticParams() {
   }))
 }
 
-export async function generateMetadata({ params }) {
-  const { slug } = await params;
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   let post = getBlogPosts().find((post) => post.slug === slug)
   if (!post) {
     return
@@ -52,8 +53,8 @@ export async function generateMetadata({ params }) {
   }
 }
 
-export default async function Blog({ params }) {
-  const { slug } = await params;
+export default async function Blog({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
   let post = getBlogPosts().find((post) => post.slug === slug)
 
   if (!post) {
@@ -79,22 +80,20 @@ export default async function Blog({ params }) {
             url: `${baseUrl}/blog/${post.slug}`,
             author: {
               '@type': 'Person',
-              name: 'Sagar Tamang',
+              name: PROFILE.name,
               url: baseUrl,
               sameAs: [
-                'https://x.com/sagar_builds',
-                'https://www.instagram.com/sagar_builds/',
-                'https://github.com/SAGAR-TAMANG',
+                PROFILE.githubUrl,
               ],
             },
           }),
         }}
       />
-      <h1 className="title font-semibold tracking-tighter">
+      <h1 className="title font-semibold text-2xl tracking-tighter">
         {post.metadata.title}
       </h1>
       <div className="flex justify-between items-center mt-2 mb-8">
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           {formatDate(post.metadata.publishedAt)}
         </p>
       </div>
