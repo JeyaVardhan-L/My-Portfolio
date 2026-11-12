@@ -6,12 +6,12 @@ import { Lightbulb, Mic, Globe, Paperclip, Send } from "lucide-react"
 import { AnimatePresence, motion, type Variants } from "motion/react"
 
 const PLACEHOLDERS = [
-  "ask me anything about sagar",
-  "what has sagar built?",
-  "how do i run ai models on android?",
-  "what's sagar's tech stack?",
-  "how can we work together?",
-  "show me sagar's best projects",
+  "ask me anything about jeya's work",
+  "what is forgeshell and how does it work?",
+  "how was the stm32 flight telemetry built?",
+  "tell me about the autonav lidar feasibility tests",
+  "what technologies does jeya work with?",
+  "show me jeya's engineering projects",
 ]
 
 type AIChatInputProps = {
@@ -142,7 +142,7 @@ const AIChatInput = ({ onActiveChange, onSendMessage, isLoading = false }: AICha
         {/* Input Row */}
         <div className="flex items-center gap-2 p-3 rounded-lg w-full">
           <button
-            className="p-3 rounded-lg hover:bg-secondary transition"
+            className="p-3 rounded-lg hover:bg-secondary transition hidden sm:flex items-center justify-center"
             title="Attach file"
             type="button"
             tabIndex={-1}
@@ -161,7 +161,7 @@ const AIChatInput = ({ onActiveChange, onSendMessage, isLoading = false }: AICha
               onFocus={handleActivate}
               onKeyDown={handleKeyDown}
               disabled={isLoading}
-              aria-label="Ask me anything about Sagar"
+              aria-label="Ask me anything about Jeya's engineering projects"
             />
             <div className="absolute left-0 top-0 w-full h-full pointer-events-none flex items-center px-3 py-2">
               <AnimatePresence mode="wait">
@@ -196,7 +196,7 @@ const AIChatInput = ({ onActiveChange, onSendMessage, isLoading = false }: AICha
           </div>
 
           <button
-            className="p-3 rounded-lg hover:bg-secondary transition"
+            className="p-3 rounded-lg hover:bg-secondary transition hidden sm:flex items-center justify-center"
             title="Voice input"
             type="button"
             tabIndex={-1}

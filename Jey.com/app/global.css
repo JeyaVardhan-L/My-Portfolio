@@ -61,7 +61,13 @@
 
 html {
   color-scheme: dark;
-  min-width: 360px;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .prose .anchor {
@@ -147,8 +153,10 @@ html {
 }
 
 .prose table {
-  @apply my-6 w-full border-collapse overflow-hidden rounded-lg border border-neutral-800 text-sm;
-  display: table;
+  @apply my-6 w-full border-collapse rounded-lg border border-neutral-800 text-sm;
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
   white-space: normal;
 }
 
@@ -193,9 +201,8 @@ input[type='email'] {
 
 table {
   display: block;
-  max-width: fit-content;
+  max-width: 100%;
   overflow-x: auto;
-  white-space: nowrap;
 }
 
 .title {

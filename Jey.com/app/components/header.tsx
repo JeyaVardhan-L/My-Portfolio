@@ -1,30 +1,42 @@
 import BoxedText from "./boxed-text"
+import { PROFILE } from "app/data/profile"
+
+const DISCIPLINES = [
+  'systems',
+  'robotics',
+  'embedded',
+  'computer vision',
+  'xr simulation',
+  'software',
+]
 
 const MainHeader = () => {
   return (
     <section>
       <div className="flex flex-col gap-figma-inside-gap"> 
-        <div className="flex justify-between items-center">
-          <div className="flex flex-col gap-figma-inside-gap">
-            <h1 className="font-semibold italic">
-              sagar tamang ~ <span className="text-xs inline-flex align-bottom leading-4">सागर तामाङ</span>
+        <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-3 sm:gap-4">
+          <div className="flex flex-col gap-figma-inside-gap min-w-0 flex-1">
+            <h1 className="font-semibold italic text-lg md:text-xl">
+              {PROFILE.name.toLowerCase()} ~ <span className="text-xs inline-flex align-bottom leading-4 font-normal not-italic text-muted-foreground">{PROFILE.nativeScript}</span>
             </h1>
-            <div className="font-semibold italic text-sm">
-              <BoxedText text={"product,ai,research,web,design,elt"} />
+            <div className="flex flex-wrap items-center gap-1.5 self-start">
+              {DISCIPLINES.map((discipline) => (
+                <BoxedText key={discipline} text={discipline} />
+              ))}
             </div>
-            <p className="italic">
-              i <span className="not-italic font-medium">build</span> <span className="underline">fast</span>
+            <p className="italic text-muted-foreground text-xs sm:text-sm">
+              building <span className="text-foreground not-italic font-medium">real systems</span> across <span className="text-foreground underline decoration-muted-foreground underline-offset-4">software & hardware</span>
             </p>
             <p className="sr-only">
-              @sagar_builds
+              @{PROFILE.handle} — {PROFILE.headline}
             </p>
           </div>
-          <div className="text-right">
-            <p className="font-normal italic">
-              ಬೆಂಗಳೂರು
+          <div className="text-left sm:text-right shrink-0">
+            <p className="font-normal italic text-xs text-muted-foreground">
+              {PROFILE.locationNative}
             </p>
-            <p className="font-normal italic">
-              Bangalore, India
+            <p className="font-normal italic text-xs sm:text-sm">
+              {PROFILE.location}
             </p>
           </div>
         </div>

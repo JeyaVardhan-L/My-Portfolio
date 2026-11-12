@@ -1,45 +1,71 @@
 import fs from 'fs'
 import path from 'path'
 
-type Metadata = {
+export type Metadata = {
   title: string
   publishedAt: string
   summary: string
   image?: string
+  category?: string
+  readTime?: string
+}
+
+export function calculateReadingTime(content: string): string {
+  const words = content.trim().split(/\s+/).filter(Boolean).length
+  const minutes = Math.max(1, Math.ceil(words / 200))
+  return `${minutes} min read`
 }
 
 function parseFrontmatter(fileContent: string) {
   let frontmatterRegex = /---\s*([\s\S]*?)\s*---/
   let match = frontmatterRegex.exec(fileContent)
-  let frontMatterBlock = match![1]
+  if (!match) {
+    return { metadata: {} as Metadata, content: fileContent }
+  }
+  let frontMatterBlock = match[1]
   let content = fileContent.replace(frontmatterRegex, '').trim()
   let frontMatterLines = frontMatterBlock.trim().split('\n')
   let metadata: Partial<Metadata> = {}
 
   frontMatterLines.forEach((line) => {
     let [key, ...valueArr] = line.split(': ')
-    let value = valueArr.join(': ').trim()
-    value = value.replace(/^['"](.*)['"]$/, '$1') // Remove quotes
-    metadata[key.trim() as keyof Metadata] = value
+    if (key && valueArr.length > 0) {
+      let value = valueArr.join(': ').trim()
+      value = value.replace(/^['"](.*)['"]$/, '$1') // Remove quotes
+      metadata[key.trim() as keyof Metadata] = value
+    }
   })
 
   return { metadata: metadata as Metadata, content }
 }
 
-function getMDXFiles(dir) {
+function resolveDirectory(subpath: string[]) {
+  const directPath = path.join(process.cwd(), ...subpath)
+  if (fs.existsSync(directPath)) return directPath
+  const nestedPath = path.join(process.cwd(), 'Jey.com', ...subpath)
+  if (fs.existsSync(nestedPath)) return nestedPath
+  return directPath
+}
+
+function getMDXFiles(dir: string) {
+  if (!fs.existsSync(dir)) return []
   return fs.readdirSync(dir).filter((file) => path.extname(file) === '.mdx')
 }
 
-function readMDXFile(filePath) {
+function readMDXFile(filePath: string) {
   let rawContent = fs.readFileSync(filePath, 'utf-8')
   return parseFrontmatter(rawContent)
 }
 
-function getMDXData(dir) {
+function getMDXData(dir: string) {
   let mdxFiles = getMDXFiles(dir)
   return mdxFiles.map((file) => {
     let { metadata, content } = readMDXFile(path.join(dir, file))
     let slug = path.basename(file, path.extname(file))
+
+    if (!metadata.readTime) {
+      metadata.readTime = calculateReadingTime(content)
+    }
 
     return {
       metadata,
@@ -50,11 +76,15 @@ function getMDXData(dir) {
 }
 
 export function getBlogPosts() {
-  return getMDXData(path.join(process.cwd(), 'app', 'blog', 'posts'))
+  const dir = resolveDirectory(['app', 'blog', 'posts'])
+  return getMDXData(dir)
 }
 
 export function formatDate(date: string, includeRelative = false) {
   let currentDate = new Date()
+  if (!date || isNaN(new Date(date).getTime())) {
+    return 'Recent'
+  }
   if (!date.includes('T')) {
     date = `${date}T00:00:00`
   }

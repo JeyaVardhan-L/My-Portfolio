@@ -1,43 +1,28 @@
-import Image from "next/image"
 import { HoverLinkPreview } from "./hover-link-preview"
+import { PROFILE } from "app/data/profile"
 
 const Current = () => {
   return (
     <section>
       <div className="flex flex-col gap-figma-inside-gap">
-        <h2 className="font-semibold italic">
-          Current
+        <h2 className="font-semibold italic text-base">
+          About & Engineering Focus
         </h2>
-        <p>ai engineer at{' '}
-          <span className="inline-flex align-middle gap-0.5 bg-white text-black rounded-sm px-0.5 py-0 hover:cursor-pointer hover:bg-white/90 active:bg-white/70 transition leading-4">
-            <Image
-              className="invert"
-              src={"/twospoon-logo-favicon.svg"}
-              alt="favicon"
-              height={12}
-              width={12}
-            />
-            <HoverLinkPreview
-              href="https://twospoon.ai/"
-              previewImage="/previews/twospoon.webp"
-              imageAlt="TwoSpoon.ai preview"
-            >
-              twospoon.ai
-            </HoverLinkPreview>
-          </span>
-          , building intelligent systems that are both scalable and fast. research aptitude with 4 best paper awards and 30+ citations on
-          {' '}
+        <p className="leading-relaxed">
+          systems and software developer building inspectable tools and autonomous platforms from first principles. my focus sits at the boundary where computation meets physical systems—engineering unix process pipelines in c, bare-metal firmware on stm32, and real-time computer vision models.
+        </p>
+        <p className="leading-relaxed">
+          on{' '}
           <HoverLinkPreview
-            href="https://scholar.google.com/citations?hl=en&user=3mS0Y4wAAAAJ"
-            previewImage="/previews/google-scholar.svg"
-            imageAlt="Google Scholar preview"
+            href={PROFILE.githubUrl}
+            previewImage="/projects/forgeshell-terminal.png"
+            imageAlt="Jeya Vardhan Engineering Projects"
             className="underline hover:decoration-muted-foreground underline-offset-4"
           >
-            google scholar
+            github.com/jeyavardhan-l
           </HoverLinkPreview>
-          . bachelors' gold medalist. masters student @ IIT Patna and IIIT Ranchi.</p>
-        <p>enjoy coding, content creation, writing, superbikes, and reading ancient greek philosophy & history.</p>
-        <p>i can build <span className="italic font-semibold">anything.</span></p>
+          , i document and release systems code where execution constraints, memory safety, and sensor deadlines matter—from evaluating 3d lidar odometry under 10hz physical cycles to streaming live spatial attitude over serial into the browser.
+        </p>
       </div>
     </section>
   )
