@@ -1,9 +1,25 @@
 name: Deploy site
 
+# Each theme lives on its own branch: `main` and any `theme/<name>`.
+# The repository variable LIVE_THEME names the branch that is live
+# (empty means `main`).
+#
+# - Pushing to the live branch deploys it automatically.
+# - Pushing to any other theme branch just saves it; nothing goes live.
+# - To switch themes: Actions -> Deploy site -> Run workflow, and type the
+#   branch name. Then set LIVE_THEME to that branch
+#   (Settings -> Secrets and variables -> Actions -> Variables) so later
+#   pushes to it keep deploying.
+
 on:
   push:
-    branches: [main]
+    branches: [main, 'theme/**']
   workflow_dispatch:
+    inputs:
+      theme:
+        description: 'Branch to put live (main, or theme/<name>)'
+        required: true
+        default: main
 
 permissions:
   contents: read
@@ -16,9 +32,12 @@ concurrency:
 
 jobs:
   build:
+    if: github.event_name == 'workflow_dispatch' || github.ref_name == (vars.LIVE_THEME || 'main')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.theme || github.ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22

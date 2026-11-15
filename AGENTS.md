@@ -140,3 +140,11 @@ real ones. Commit as `Add inspiration`.
 - Don't change components, layouts or styles when the request is content only.
 - Don't add dependencies for content changes.
 - Don't rewrite git history or force-push.
+
+## Themes
+
+Each theme is its own branch: `main` and `theme/<name>`. The repository
+variable `LIVE_THEME` (empty means `main`) is the live one; pushes to any other
+theme branch are saved but not deployed. Make content changes (projects,
+writing, about) on every theme branch Jeya wants them in, and never merge one
+theme branch into another unless asked. Switching is described in README.md.

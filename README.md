@@ -51,3 +51,25 @@ are old prints: the home comet is a wood engraving of the Great Comet of 1843 fr
 *Illustrated London News*, scanned by
 Wellcome Collection (CC BY 4.0, credited on the page); the footer waves are
 from *Picturesque America*, 1872 (public domain, via Wikimedia Commons).
+
+## Themes
+
+Every theme is a full copy of the site on its own branch. `main` holds the
+engraved cobalt theme; a new theme goes on `theme/<name>`. Only one is live at
+a time, and the others stay saved untouched.
+
+- **Start a theme:** branch from `main` as `theme/<name>` and redesign there.
+  Pushes to it never touch the live site.
+- **Put a theme live:** GitHub -> Actions -> *Deploy site* -> *Run workflow*,
+  type the branch (`main` or `theme/<name>`). Then set the repository variable
+  `LIVE_THEME` to that branch (Settings -> Secrets and variables -> Actions ->
+  Variables) so later pushes to it keep deploying.
+- **Switch back:** run the workflow again with the other branch and update
+  `LIVE_THEME`.
+
+From a terminal with the GitHub CLI:
+
+```bash
+gh variable set LIVE_THEME --body theme/<name>
+gh workflow run deploy.yml -f theme=theme/<name>
+```

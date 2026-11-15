@@ -135,7 +135,7 @@ const posts = (await getPosts()).slice(0, 4);
   .name {
     position: relative;
     z-index: 2;
-    margin-top: clamp(28px, 7vh, 88px);
+    margin-top: clamp(20px, 6vh, 88px);
     text-align: center;
     white-space: nowrap;
     font: 400 clamp(60px, 18.5vw, 360px) / 0.9 var(--serif);
@@ -232,7 +232,9 @@ const posts = (await getPosts()).slice(0, 4);
     border-bottom: 0;
   }
 
-  @media (max-width: 720px) {
+  /* Portrait screens of any width (phones, including desktop-site mode, and
+     tablets): size the hero to its content so no empty band opens up. */
+  @media (max-width: 720px), (orientation: portrait) {
     .hero {
       min-height: auto;
     }
@@ -245,12 +247,15 @@ const posts = (await getPosts()).slice(0, 4);
 
     .hero :global(.art--hero .art-in) {
       min-height: 0;
-      height: 62vw;
+      height: clamp(240px, 64vw, 720px);
     }
 
     .hero :global(.art--hero img) {
-      object-position: 50% 40%;
+      object-position: 50% 45%;
     }
+  }
+
+  @media (max-width: 720px) {
 
     .hero-hud {
       flex-direction: column;
