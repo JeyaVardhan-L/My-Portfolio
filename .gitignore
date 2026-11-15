@@ -1,44 +1,7 @@
-# Dependencies
 node_modules/
-Jey.com/node_modules/
-/.pnp
-.pnp.js
-
-# Testing
-/coverage
-
-# Next.js build outputs
-.next/
-Jey.com/.next/
-/out/
-Jey.com/out/
-
-# Production
-/build
-Jey.com/build
-
-# Misc
-.DS_Store
-*.pem
-.vscode/
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# Environment files
+dist/
+.astro/
 .env
-.env*.local
-Jey.com/.env
-Jey.com/.env*.local
-
-# Vercel
-.vercel
-Jey.com/.vercel
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
-Jey.com/next-env.d.ts
+.env.*
+.DS_Store
+Thumbs.db

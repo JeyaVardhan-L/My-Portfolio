@@ -1,0 +1,418 @@
+---
+import { SITE } from '../site';
+import { getPosts, getProjects, sideLabel, url } from '../lib/site';
+
+const projects = await getProjects();
+const posts = await getPosts();
+
+type Item = { group: string; label: string; href?: string; action?: string; value?: string; hint?: string };
+
+const items: Item[] = [
+  { group: 'Pages', label: 'Home', href: url('/') },
+  { group: 'Pages', label: 'Work', href: url('/projects/') },
+  { group: 'Pages', label: 'Writing', href: url('/writing/') },
+  { group: 'Pages', label: 'About', href: url('/about/') },
+  { group: 'Pages', label: 'Inspiration', href: url('/inspiration/') },
+  { group: 'Actions', label: 'Switch side', action: 'switch' },
+  ...(SITE.email ? [{ group: 'Actions', label: 'Copy email address', action: 'copy', value: SITE.email }] : []),
+  ...projects.map((p) => ({
+    group: 'Projects',
+    label: p.data.title,
+    href: url(`/projects/${p.id}/`),
+    hint: sideLabel[p.data.side],
+  })),
+  ...posts.map((p) => ({ group: 'Writing', label: p.data.title, href: url(`/writing/${p.id}/`) })),
+  { group: 'Elsewhere', label: 'GitHub', href: SITE.github, hint: 'github.com' },
+  ...(SITE.linkedin ? [{ group: 'Elsewhere', label: 'LinkedIn', href: SITE.linkedin }] : []),
+];
+
+const json = JSON.stringify(items).replace(/</g, '\\u003c');
+---
+
+<div class="peek" data-peek aria-hidden="true">
+  <div class="peek-bar"><i></i><i></i><i></i><span data-peek-title></span></div>
+  <div class="peek-media">
+    <img data-peek-img alt="" decoding="async" />
+    <div class="peek-card dotgrid" data-peek-card></div>
+  </div>
+</div>
+
+<dialog class="win" data-win aria-labelledby="win-title">
+  <div class="win-frame" data-win-frame>
+    <div class="win-bar">
+      <div class="lights">
+        <button type="button" class="light light-close" data-win-close aria-label="Close"></button>
+        <span class="light light-min" aria-hidden="true"></span>
+        <span class="light light-max" aria-hidden="true"></span>
+      </div>
+      <p class="win-title" id="win-title" data-win-title></p>
+      <a class="win-open" data-win-open href="#">Open page ↗</a>
+    </div>
+    <div class="win-body" data-win-body tabindex="-1"></div>
+  </div>
+</dialog>
+
+<dialog class="pal" data-pal aria-label="Quick menu">
+  <div class="pal-box">
+    <input
+      class="pal-input"
+      data-pal-input
+      type="text"
+      role="combobox"
+      aria-expanded="true"
+      aria-controls="pal-list"
+      aria-autocomplete="list"
+      placeholder="Jump to a page, project or piece of writing…"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <ul class="pal-list" id="pal-list" role="listbox" data-pal-list></ul>
+    <p class="pal-foot label">
+      <span>↑ ↓ move</span><span>↵ open</span><span>esc close</span><span class="pal-note" data-pal-note></span>
+    </p>
+  </div>
+</dialog>
+
+<script type="application/json" id="pal-data" set:html={json} />
+
+<style is:global>
+  /* ── floating project preview ── */
+  .peek {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 60;
+    width: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    box-shadow: var(--shadow);
+    pointer-events: none;
+    opacity: 0;
+    transform: translate3d(-9999px, 0, 0);
+    transition: opacity 0.25s var(--ease-out);
+    will-change: transform, opacity;
+  }
+
+  .peek.on {
+    opacity: 1;
+  }
+
+  .peek-bar {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper-2);
+  }
+
+  .peek-bar i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--rule);
+  }
+
+  .peek-bar span {
+    margin-left: 6px;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .peek-media {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: var(--paper-2);
+  }
+
+  .peek-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .peek-media img:not([src]) {
+    display: none;
+  }
+
+  .peek-card {
+    position: absolute;
+    inset: 0;
+    padding: 16px;
+    display: none;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 4px;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .peek-card.on {
+    display: flex;
+  }
+
+  .peek-card b {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 1.35rem;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    margin-bottom: auto;
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .peek {
+      display: none;
+    }
+  }
+
+  /* ── reading window ── */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  .win {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  .win::backdrop {
+    background: rgb(12 12 12 / 0);
+    transition: background 0.45s var(--ease-out), backdrop-filter 0.45s var(--ease-out);
+  }
+
+  .win.open::backdrop {
+    background: rgb(12 12 12 / 0.32);
+    backdrop-filter: blur(6px);
+  }
+
+  .win-frame {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: min(800px, calc(100vw - 2rem));
+    height: min(88dvh, 940px);
+    display: flex;
+    flex-direction: column;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    box-shadow: 0 50px 140px -30px rgb(0 0 0 / 0.55), 0 0 0 1px rgb(0 0 0 / 0.02);
+    overflow: hidden;
+    transform-origin: 0 0;
+  }
+
+  .win-bar {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, auto) 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper-2);
+    flex: none;
+  }
+
+  .lights {
+    display: flex;
+    gap: 8px;
+  }
+
+  .light {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ff5f57;
+    box-shadow: inset 0 0 0 0.5px rgb(0 0 0 / 0.2);
+  }
+
+  .light-min {
+    background: #febc2e;
+  }
+
+  .light-max {
+    background: #28c840;
+  }
+
+  .light-close::after {
+    content: '×';
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font: 600 11px/1 var(--sans);
+    color: rgb(0 0 0 / 0.55);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .lights:hover .light-close::after,
+  .light-close:focus-visible::after {
+    opacity: 1;
+  }
+
+  .win-title {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .win-open {
+    justify-self: end;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .win-open:hover {
+    color: var(--ink);
+  }
+
+  .win-body {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: clamp(1.75rem, 5vw, 3.75rem) clamp(1.25rem, 6vw, 4rem) 5rem;
+    outline: none;
+  }
+
+  .win-loading {
+    text-align: center;
+    padding-top: 30vh;
+  }
+
+  @media (max-width: 640px) {
+    .win-frame {
+      width: calc(100vw - 1rem);
+      height: calc(100dvh - 1rem);
+      border-radius: 10px;
+    }
+
+    .win-open {
+      display: none;
+    }
+  }
+
+  /* ── quick menu ── */
+  .pal {
+    width: min(580px, calc(100vw - 2rem));
+    margin: 14vh auto auto;
+    padding: 0;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 40px 120px -30px rgb(0 0 0 / 0.5);
+    overflow: hidden;
+  }
+
+  .pal[open] {
+    animation: pal-in 0.28s var(--ease-out);
+  }
+
+  .pal::backdrop {
+    background: rgb(12 12 12 / 0.25);
+    backdrop-filter: blur(3px);
+  }
+
+  @keyframes pal-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px) scale(0.98);
+    }
+  }
+
+  .pal-input {
+    width: 100%;
+    padding: 1.1rem 1.25rem;
+    border: 0;
+    border-bottom: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink);
+    font: 1.15rem/1.3 var(--serif);
+    outline: none;
+  }
+
+  .pal-input::placeholder {
+    color: var(--muted);
+  }
+
+  .pal-list {
+    list-style: none;
+    margin: 0;
+    padding: 0.4rem;
+    max-height: min(52vh, 420px);
+    overflow-y: auto;
+  }
+
+  .pal-group {
+    padding: 0.8rem 0.75rem 0.35rem;
+  }
+
+  .pal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 7px;
+    cursor: pointer;
+  }
+
+  .pal-item[aria-selected='true'] {
+    background: var(--accent-soft);
+  }
+
+  .pal-item .label {
+    white-space: nowrap;
+  }
+
+  .pal-empty {
+    padding: 1.5rem 0.75rem;
+    color: var(--muted);
+  }
+
+  .pal-foot {
+    display: flex;
+    gap: 1.25rem;
+    padding: 0.7rem 1.25rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .pal-note {
+    margin-left: auto;
+    color: var(--accent);
+  }
+</style>

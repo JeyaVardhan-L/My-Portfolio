@@ -1,0 +1,116 @@
+---
+import { SITE } from '../site';
+import { url } from '../lib/site';
+
+const out = [
+  SITE.email && { label: 'Email', href: `mailto:${SITE.email}` },
+  { label: 'GitHub', href: SITE.github },
+  SITE.linkedin && { label: 'LinkedIn', href: SITE.linkedin },
+  SITE.resume && { label: 'Résumé', href: url(SITE.resume) },
+  { label: 'RSS', href: url('/rss.xml') },
+].filter(Boolean) as { label: string; href: string }[];
+
+const pages = [
+  { label: 'Work', href: url('/projects/') },
+  { label: 'Writing', href: url('/writing/') },
+  { label: 'About', href: url('/about/') },
+  { label: 'Inspiration', href: url('/inspiration/') },
+];
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot">
+      <div class="sig">
+        <p class="sig-name">{SITE.name} <span lang="te">{SITE.nameTe}</span></p>
+        <p class="label">
+          {SITE.location} · <span data-clock>--:--</span> IST
+        </p>
+      </div>
+      <ul class="foot-list label">
+        {pages.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+      <ul class="foot-list label">
+        {
+          out.map((l) => (
+            <li>
+              <a href={l.href} rel={l.href.startsWith('http') ? 'me noopener' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <p class="colophon label">
+      © {new Date().getFullYear()} {SITE.fullName}. Set in Newsreader, Jost and Departure Mono.
+      <span class="fine">Press ⌘K or Ctrl K to jump anywhere.</span>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: clamp(6rem, 14vw, 10rem);
+    padding-bottom: 2.5rem;
+  }
+
+  .foot {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 2rem clamp(2.5rem, 7vw, 6rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .sig-name {
+    font-family: var(--sans);
+    letter-spacing: 0.12em;
+    margin-bottom: 0.4rem;
+  }
+
+  .sig-name span {
+    color: var(--muted);
+    letter-spacing: 0;
+    margin-left: 0.35rem;
+  }
+
+  .foot-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+    letter-spacing: 0.14em;
+  }
+
+  .foot-list a {
+    text-decoration: none;
+  }
+
+  .foot-list a:hover {
+    color: var(--ink);
+  }
+
+  .colophon {
+    margin-top: 3rem;
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .fine {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .foot {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .sig {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

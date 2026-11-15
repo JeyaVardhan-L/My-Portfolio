@@ -1,0 +1,304 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getProjects, monthYear, sideLabel, url, type Project } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const all = await getProjects();
+  return all.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, prev: all[i - 1] ?? null, next: all[i + 1] ?? null },
+  }));
+}
+
+interface Props {
+  entry: Project;
+  prev: Project | null;
+  next: Project | null;
+}
+
+const { entry, prev, next } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const og = d.cover ? (await getImage({ src: d.cover, width: 1200, format: 'jpg' })).src : undefined;
+---
+
+<Base title={d.title} description={d.summary} image={og} article>
+  <article class="wrap proj">
+    <a class="more back" href={url('/projects/')}><span>←</span> All work</a>
+    <header class="proj-head">
+      <p class="label">
+        {sideLabel[d.side]} · {monthYear(d.date)}{d.status !== 'shipped' && ` · ${d.status}`}
+      </p>
+      <h1>{d.title}</h1>
+      <p class="lede">{d.summary}</p>
+      {
+        (d.repo || d.demo) && (
+          <p class="proj-links">
+            {d.demo && (
+              <a class="pill pill--solid" href={d.demo}>
+                Try it live ↗
+              </a>
+            )}
+            {d.repo && (
+              <a class="pill" href={d.repo}>
+                Source on GitHub ↗
+              </a>
+            )}
+          </p>
+        )
+      }
+    </header>
+
+    {
+      d.cover && (
+        <figure class="proj-cover">
+          <div class="cover-bar" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+            <span>{d.title}</span>
+          </div>
+          <Image src={d.cover} alt={`Screenshot of ${d.title}`} widths={[640, 960, 1400]} sizes="(min-width: 1180px) 1120px, 100vw" />
+        </figure>
+      )
+    }
+
+    <div class="proj-grid">
+      <aside class="specs">
+        {
+          d.specs.length > 0 && (
+            <section>
+              <p class="label label--ink">Specifications</p>
+              <dl>
+                {d.specs.map((s) => (
+                  <div>
+                    <dt class="label">{s.label}</dt>
+                    <dd>{s.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )
+        }
+        {
+          d.tags.length > 0 && (
+            <section>
+              <p class="label label--ink">Stack</p>
+              <ul class="tags">
+                {d.tags.map((t) => (
+                  <li class="tag">{t}</li>
+                ))}
+              </ul>
+            </section>
+          )
+        }
+      </aside>
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+
+    <nav class="pager" aria-label="More projects">
+      {
+        prev ? (
+          <a href={url(`/projects/${prev.id}/`)}>
+            <span class="label">← Previous</span>
+            <span class="pager-title">{prev.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        next && (
+          <a class="next" href={url(`/projects/${next.id}/`)}>
+            <span class="label">Next →</span>
+            <span class="pager-title">{next.data.title}</span>
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .back {
+    display: inline-block;
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .back:hover span {
+    transform: translateX(-3px);
+  }
+
+  .proj-head {
+    padding-top: 2rem;
+    max-width: 52rem;
+  }
+
+  .proj-head h1 {
+    margin-top: 1rem;
+    font-size: clamp(2.6rem, 1.6rem + 4vw, 4.6rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .proj-head .lede {
+    margin-top: 1.3rem;
+  }
+
+  .proj-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .pill {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.7rem 1.05rem;
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .pill:hover,
+  .pill--solid {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .pill--solid:hover {
+    background: transparent;
+    color: var(--ink);
+  }
+
+  .proj-cover {
+    margin: clamp(2.5rem, 6vw, 4rem) 0 0;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--paper-2);
+    box-shadow: var(--shadow);
+  }
+
+  .cover-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .cover-bar i {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--rule);
+  }
+
+  .cover-bar span {
+    margin-left: 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .proj-cover img {
+    width: 100%;
+    height: auto;
+    max-height: 72vh;
+    object-fit: contain;
+  }
+
+  .proj-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    gap: clamp(2rem, 6vw, 5.5rem);
+    margin-top: clamp(3rem, 7vw, 5rem);
+  }
+
+  .specs {
+    align-self: start;
+    position: sticky;
+    top: 2rem;
+    display: grid;
+    gap: 2.25rem;
+  }
+
+  .specs dl {
+    margin: 0.8rem 0 0;
+  }
+
+  .specs dl div {
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .specs dd {
+    margin: 0.2rem 0 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0.8rem 0 0;
+    padding: 0;
+  }
+
+  .prose > :global(:first-child) {
+    margin-top: 0;
+  }
+
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: clamp(4rem, 9vw, 7rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .pager a {
+    display: grid;
+    gap: 0.4rem;
+    text-decoration: none;
+  }
+
+  .pager .next {
+    text-align: right;
+  }
+
+  .pager-title {
+    font-size: 1.3rem;
+    letter-spacing: -0.01em;
+  }
+
+  .pager a:hover .pager-title {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+
+  @media (max-width: 860px) {
+    .proj-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .specs {
+      position: static;
+    }
+  }
+</style>

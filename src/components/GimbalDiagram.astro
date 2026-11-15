@@ -1,0 +1,116 @@
+---
+function square(y0: number, y1: number, segs: [number, boolean][], repeat: number) {
+  let x = 330;
+  let d = `M${x} ${segs[0][1] ? y0 : y1}`;
+  for (let r = 0; r < repeat; r++) {
+    for (const [len, hi] of segs) {
+      x += len;
+      d += ` V${hi ? y0 : y1} H${x}`;
+    }
+  }
+  return d;
+}
+
+const sda = square(350, 364, [[30, true], [20, false], [10, true], [20, false]], 4);
+const scl = square(378, 392, [[10, true], [10, false]], 16);
+
+const pins: string[] = [];
+for (let i = 0; i < 4; i++) {
+  const o = -18 + i * 12;
+  pins.push(`M${o} -26 V-32`, `M${o} 26 V32`, `M-26 ${o} H-32`, `M26 ${o} H32`);
+}
+
+const spline = '0.45 0 0.55 1;0.45 0 0.55 1';
+const axes = [
+  { n: 'ROLL', v: '45;72;24;58;45', dur: 5 },
+  { n: 'PITCH', v: '45;30;66;40;45', dur: 6.5 },
+  { n: 'YAW', v: '45;60;52;20;45', dur: 8 },
+];
+---
+
+<svg class="diagram anim" viewBox="0 0 600 440" role="img" aria-labelledby="gb-title">
+  <title id="gb-title">An IMU chip inside three turning gimbal rings, with its I2C data and clock lines below</title>
+  <defs>
+    <marker id="gb-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="currentColor"></path>
+    </marker>
+    <clipPath id="gb-clip"><rect x="330" y="344" width="230" height="54"></rect></clipPath>
+  </defs>
+
+  <g class="ln thin">
+    <path d="M8 18 H28 M18 8 V28 M572 18 H592 M582 8 V28 M8 422 H28 M18 412 V432 M572 422 H592 M582 412 V432"></path>
+  </g>
+
+  <text class="s" x="40" y="22">MPU6050 · 3-AXIS GYRO + 3-AXIS ACCEL</text>
+  <text class="s" x="560" y="22" text-anchor="end">α = 0.98</text>
+  <text class="s" x="560" y="36" text-anchor="end">COMPLEMENTARY FILTER</text>
+
+  {
+    axes.map((a, i) => (
+      <g transform={`translate(40 ${74 + i * 34})`}>
+        <text class="s" y="0">
+          {a.n}
+        </text>
+        <rect class="ln thin" x="0" y="7" width="90" height="8" />
+        <path class="ln thin" d="M45 5 V17" />
+        <rect class="fillc" x="45" y="6" width="3" height="10">
+          <animate attributeName="x" values={a.v} dur={`${a.dur}s`} repeatCount="indefinite" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" keySplines={`${spline};${spline}`} />
+        </rect>
+      </g>
+    ))
+  }
+
+  <g transform="translate(300 190)">
+    <ellipse class="ln" rx="150" ry="150">
+      <animate attributeName="rx" values="150;34;150" keyTimes="0;0.5;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines={spline}></animate>
+    </ellipse>
+    <ellipse class="ln thin" rx="142" ry="142">
+      <animate attributeName="rx" values="142;28;142" keyTimes="0;0.5;1" dur="9s" repeatCount="indefinite" calcMode="spline" keySplines={spline}></animate>
+    </ellipse>
+    <circle class="fillc" cx="0" cy="-150" r="3.5"></circle>
+    <circle class="fillc" cx="0" cy="150" r="3.5"></circle>
+
+    <ellipse class="ln" rx="116" ry="116">
+      <animate attributeName="ry" values="116;34;116" keyTimes="0;0.5;1" dur="6.5s" repeatCount="indefinite" calcMode="spline" keySplines={spline}></animate>
+    </ellipse>
+    <ellipse class="ln thin" rx="109" ry="109">
+      <animate attributeName="ry" values="109;30;109" keyTimes="0;0.5;1" dur="6.5s" repeatCount="indefinite" calcMode="spline" keySplines={spline}></animate>
+    </ellipse>
+
+    <g>
+      <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="16s" repeatCount="indefinite"></animateTransform>
+      <ellipse class="ln" rx="84" ry="30"></ellipse>
+      <circle class="fillc" cx="84" cy="0" r="3"></circle>
+      <circle class="fillc" cx="-84" cy="0" r="3"></circle>
+    </g>
+
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="-10;10;-10" keyTimes="0;0.5;1" dur="4.5s" repeatCount="indefinite" calcMode="spline" keySplines={spline}></animateTransform>
+      <path class="ln" d={pins.join(' ')}></path>
+      <rect class="box solid" x="-26" y="-26" width="52" height="52" rx="4"></rect>
+      <circle class="fillc" cx="-18" cy="-18" r="2"></circle>
+      <text class="t mid" y="-1" style="font-size: 11px">MPU</text>
+      <text class="t mid" y="13" style="font-size: 11px">6050</text>
+    </g>
+  </g>
+
+  <g transform="translate(84 388)">
+    <path class="ln" d="M0 0 H50" marker-end="url(#gb-arr)"></path>
+    <path class="ln" d="M0 0 V-50" marker-end="url(#gb-arr)"></path>
+    <path class="ln" d="M0 0 L-28 22" marker-end="url(#gb-arr)"></path>
+    <text class="s" x="58" y="4">X</text>
+    <text class="s" x="-4" y="-58">Y</text>
+    <text class="s" x="-46" y="34">Z</text>
+  </g>
+
+  <text class="s" x="318" y="361" text-anchor="end">SDA</text>
+  <text class="s" x="318" y="389" text-anchor="end">SCL</text>
+  <g clip-path="url(#gb-clip)">
+    <g>
+      <animateTransform attributeName="transform" type="translate" from="0 0" to="-80 0" dur="1.8s" repeatCount="indefinite"></animateTransform>
+      <path class="ln" d={sda}></path>
+      <path class="ln" d={scl}></path>
+    </g>
+  </g>
+  <text class="s" x="330" y="418">I²C · 400 KHZ</text>
+</svg>

@@ -1,0 +1,92 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { fullDate, getPosts, readMinutes, url, type Post } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const all = await getPosts();
+  return all.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, newer: all[i - 1] ?? null, older: all[i + 1] ?? null },
+  }));
+}
+
+interface Props {
+  entry: Post;
+  newer: Post | null;
+  older: Post | null;
+}
+
+const { entry, newer, older } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+---
+
+<Base title={d.title} description={d.summary} article>
+  <article class="wrap single">
+    <a class="more back" href={url('/writing/')}><span>←</span> All writing</a>
+    <div class="post" data-article>
+      <header class="post-head">
+        <p class="label">
+          {fullDate(d.date)} · {readMinutes(entry.body)} min read{d.tags.length > 0 && ` · ${d.tags.join(', ')}`}
+        </p>
+        <h1>{d.title}</h1>
+        <p class="lede">{d.summary}</p>
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+    <nav class="pager" aria-label="More writing">
+      {
+        older ? (
+          <a href={url(`/writing/${older.id}/`)}>
+            <span class="label">← Older</span>
+            <span>{older.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        newer && (
+          <a class="newer" href={url(`/writing/${newer.id}/`)}>
+            <span class="label">Newer →</span>
+            <span>{newer.data.title}</span>
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .single {
+    max-width: calc(var(--measure) + var(--gutter) * 2);
+  }
+
+  .back {
+    display: inline-block;
+    margin: clamp(2.5rem, 6vw, 4rem) 0 2.5rem;
+  }
+
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .pager a {
+    display: grid;
+    gap: 0.35rem;
+    text-decoration: none;
+    line-height: 1.35;
+  }
+
+  .pager .newer {
+    text-align: right;
+  }
+</style>

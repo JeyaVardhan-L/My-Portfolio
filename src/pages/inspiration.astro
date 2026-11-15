@@ -1,0 +1,100 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { url } from '../lib/site';
+
+const mods = import.meta.glob<{ default: ImageMetadata }>('../assets/inspiration/*.{jpg,jpeg,png,webp,avif}', {
+  eager: true,
+});
+const images = Object.entries(mods)
+  .sort(([a], [b]) => b.localeCompare(a))
+  .map(([, m]) => m.default);
+---
+
+<Base title="Inspiration" description="Pictures I keep coming back to." dark>
+  <section class="room" data-spotlight>
+    <header class="wrap room-head">
+      <div>
+        <p class="label">Inspiration</p>
+        <p class="room-note">Pictures I keep coming back to. Move the light around.</p>
+      </div>
+      <a class="more" href={url('/about/')}><span>←</span> Back to about</a>
+    </header>
+    <div class="collage">
+      {
+        images.map((img, i) => (
+          <figure class="tile">
+            <Image src={img} alt="" widths={[360, 720]} sizes="(min-width: 1100px) 20vw, (min-width: 640px) 33vw, 50vw" loading={i < 8 ? 'eager' : 'lazy'} />
+          </figure>
+        ))
+      }
+    </div>
+    <div class="spot" aria-hidden="true"></div>
+  </section>
+</Base>
+
+<script>
+  import '../scripts/spotlight';
+</script>
+
+<style>
+  .room {
+    position: relative;
+    --mx: 50vw;
+    --my: 40vh;
+  }
+
+  .room-head {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-block: clamp(2rem, 5vw, 3.5rem) 1.5rem;
+  }
+
+  .room-note {
+    margin-top: 0.4rem;
+    font-family: var(--sans);
+    letter-spacing: 0.02em;
+    color: var(--ink-2);
+  }
+
+  .collage {
+    columns: 5 200px;
+    column-gap: 6px;
+    padding-inline: 6px;
+  }
+
+  .tile {
+    margin: 0 0 6px;
+    break-inside: avoid;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+
+  .tile img {
+    width: 100%;
+    height: auto;
+    transition: transform 1.4s var(--ease-out);
+  }
+
+  .tile:hover img {
+    transform: scale(1.04);
+  }
+
+  .spot {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: radial-gradient(
+      circle 320px at var(--mx) var(--my),
+      transparent 0%,
+      transparent 38%,
+      rgb(3 3 5 / 0.86) 100%
+    );
+  }
+</style>

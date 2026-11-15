@@ -1,0 +1,70 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Overlays from '../components/Overlays.astro';
+import { SITE } from '../site';
+import { url } from '../lib/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  article?: boolean;
+  dark?: boolean;
+}
+
+const { title, description = SITE.description, image, article = false, dark = false } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · Software and hardware`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image ?? url('/og.png'), Astro.site);
+---
+
+<!doctype html>
+<html lang="en" data-side="software">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f6f2" />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        var s = 'software';
+        try {
+          var q = new URLSearchParams(location.search).get('side');
+          if (q === 'hardware' || q === 'software') localStorage.setItem('side', q);
+          s = localStorage.getItem('side') || s;
+        } catch (e) {}
+        d.dataset.side = s === 'hardware' ? 'hardware' : 'software';
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute('content', d.dataset.side === 'hardware' ? '#0b0b0a' : '#f7f6f2');
+      })();
+    </script>
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={SITE.fullName} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={`${SITE.name}: writing`} href={url('/rss.xml')} />
+    <link rel="sitemap" href={url('/sitemap-index.xml')} />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title ?? SITE.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body class:list={[{ darkroom: dark }]}>
+    <a class="skip" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <Overlays />
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

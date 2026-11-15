@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import RadarDiagram from '../components/RadarDiagram.astro';
+import { url } from '../lib/site';
+---
+
+<Base title="Not found">
+  <section class="wrap lost">
+    <div class="scope"><RadarDiagram /></div>
+    <p class="label">Error 404</p>
+    <h1>Nothing on the scope at this address.</h1>
+    <p class="lede">The page moved or never existed. <a href={url('/')}>Head home</a>, or press ⌘K to search.</p>
+  </section>
+</Base>
+
+<style>
+  .lost {
+    padding-top: clamp(3rem, 8vw, 6rem);
+    text-align: center;
+    display: grid;
+    justify-items: center;
+  }
+
+  .scope {
+    width: min(260px, 70vw);
+    margin-bottom: 2.5rem;
+  }
+
+  .lost h1 {
+    margin-top: 1rem;
+    font-size: clamp(2rem, 1.4rem + 2.5vw, 3.2rem);
+    max-width: 18ch;
+  }
+
+  .lost .lede {
+    margin-top: 1rem;
+  }
+</style>
