@@ -4,12 +4,16 @@ name: Deploy site
 # The repository variable LIVE_THEME names the branch that is live
 # (empty means `main`).
 #
-# - Pushing to the live branch deploys it automatically.
+# GitHub Pages only accepts deployments that run from `main`, so the build and
+# deploy always run there and check out whichever theme is wanted. A run that
+# starts on a theme branch just asks `main` to do it (the "relay" job).
+#
+# - Pushing to the live theme's branch deploys it automatically.
 # - Pushing to any other theme branch just saves it; nothing goes live.
-# - To switch themes: Actions -> Deploy site -> Run workflow, and type the
-#   branch name. Then set LIVE_THEME to that branch
-#   (Settings -> Secrets and variables -> Actions -> Variables) so later
-#   pushes to it keep deploying.
+# - To switch themes: Actions -> Deploy site -> Run workflow. Pick the theme's
+#   branch in "Use workflow from" (or type it in the box). Then set LIVE_THEME
+#   to that branch (Settings -> Secrets and variables -> Actions -> Variables)
+#   so later pushes to it keep deploying.
 
 on:
   push:
@@ -17,27 +21,40 @@ on:
   workflow_dispatch:
     inputs:
       theme:
-        description: 'Branch to put live (main, or theme/<name>)'
-        required: true
-        default: main
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+        description: 'Theme branch to put live (leave empty to use the branch picked above)'
+        required: false
+        default: ''
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: ${{ github.ref_name == 'main' && 'pages' || format('relay-{0}', github.ref_name) }}
+  cancel-in-progress: false
 
 jobs:
-  build:
-    if: github.event_name == 'workflow_dispatch' || github.ref_name == (vars.LIVE_THEME || 'main')
+  relay:
+    if: >-
+      github.ref_name != 'main' &&
+      (github.event_name == 'workflow_dispatch' || github.ref_name == vars.LIVE_THEME)
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Ask main to build and deploy this theme
+        env:
+          GH_TOKEN: ${{ github.token }}
+          THEME: ${{ inputs.theme || github.ref_name }}
+        run: gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref main -f theme="$THEME"
+
+  build:
+    if: >-
+      github.ref_name == 'main' &&
+      (github.event_name == 'workflow_dispatch' || vars.LIVE_THEME == '' || vars.LIVE_THEME == 'main')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.theme || github.ref }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && (inputs.theme || 'main') || github.ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -51,6 +68,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
