@@ -143,8 +143,7 @@ real ones. Commit as `Add inspiration`.
 
 ## Themes
 
-Each theme is its own branch: `main` and `theme/<name>`. The repository
-variable `LIVE_THEME` (empty means `main`) is the live one; pushes to any other
-theme branch are saved but not deployed. Make content changes (projects,
-writing, about) on every theme branch Jeya wants them in, and never merge one
-theme branch into another unless asked. Switching is described in README.md.
+ holds the live design and every push to it deploys. Jeya wants this
+design kept: don't change its look unless asked. Other designs live on
+ branches, are never deployed by a push, and must never be
+merged into  unless Jeya asks.

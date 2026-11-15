@@ -54,24 +54,8 @@ from *Picturesque America*, 1872 (public domain, via Wikimedia Commons).
 
 ## Themes
 
-Every theme is a full copy of the site on its own branch. `main` holds the
-engraved cobalt theme; a new theme goes on `theme/<name>`. Only one is live at
-a time, and the others stay saved untouched.
-
-- **Start a theme:** branch from `main` as `theme/<name>` and redesign there.
-  Pushes to it never touch the live site.
-- **Put a theme live:** GitHub -> Actions -> *Deploy site* -> *Run workflow*,
-  pick the theme's branch under "Use workflow from" and press Run. Pages only
-  deploys from `main`, so that run hands the job to `main`: a second run
-  appears a few seconds later and does the build and deploy. Then set the
-  repository variable `LIVE_THEME` to that branch (Settings -> Secrets and
-  variables -> Actions -> Variables) so later pushes to it keep deploying.
-- **Switch back:** run the workflow again with the other branch and update
-  `LIVE_THEME`.
-
-From a terminal with the GitHub CLI:
-
-```bash
-gh variable set LIVE_THEME --body theme/<name>
-gh workflow run deploy.yml -f theme=theme/<name>
-```
+ is the live site; every push to it deploys. Other designs can be kept
+on their own branches (); they are saved, never deployed by a
+push. To try one live on purpose: Actions -> *Deploy site* -> *Run workflow*,
+pick its branch under "Use workflow from" and press Run. The next push to
+ (or a run from ) puts the main design back.
