@@ -54,8 +54,8 @@ from *Picturesque America*, 1872 (public domain, via Wikimedia Commons).
 
 ## Themes
 
- is the live site; every push to it deploys. Other designs can be kept
-on their own branches (); they are saved, never deployed by a
+`main` is the live site; every push to it deploys. Other designs can be kept
+on their own branches (`theme/<name>`); they are saved, never deployed by a
 push. To try one live on purpose: Actions -> *Deploy site* -> *Run workflow*,
 pick its branch under "Use workflow from" and press Run. The next push to
- (or a run from ) puts the main design back.
+`main` (or a run from `main`) puts the main design back.

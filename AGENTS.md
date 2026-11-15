@@ -143,7 +143,7 @@ real ones. Commit as `Add inspiration`.
 
 ## Themes
 
- holds the live design and every push to it deploys. Jeya wants this
+`main` holds the live design and every push to it deploys. Jeya wants this
 design kept: don't change its look unless asked. Other designs live on
- branches, are never deployed by a push, and must never be
-merged into  unless Jeya asks.
+`theme/<name>` branches, are never deployed by a push, and must never be
+merged into `main` unless Jeya asks.
