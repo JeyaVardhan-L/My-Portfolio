@@ -1,50 +1,24 @@
 name: Deploy site
 
-# `main` is the live site: every push to `main` builds and deploys it.
-#
-# Saved themes live on other branches (`theme/<name>`) and never go live on
-# their own. To try one live on purpose: Actions -> Deploy site -> Run workflow,
-# pick the theme's branch under "Use workflow from" and press Run. Pages only
-# deploys from `main`, so that run hands the job to `main` (a second run appears
-# and deploys the theme). The next push to `main`, or a run from `main`, puts
-# the main design back.
-
 on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      theme:
-        description: 'Branch to put live (leave empty to use the branch picked above)'
-        required: false
-        default: ''
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
-  group: ${{ github.ref_name == 'main' && 'pages' || format('relay-{0}', github.ref_name) }}
+  group: pages
   cancel-in-progress: false
 
 jobs:
-  relay:
-    if: github.ref_name != 'main' && github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    permissions:
-      actions: write
-    steps:
-      - name: Ask main to build and deploy this branch
-        env:
-          GH_TOKEN: ${{ github.token }}
-          THEME: ${{ inputs.theme || github.ref_name }}
-        run: gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref main -f theme="$THEME"
-
   build:
-    if: github.ref_name == 'main'
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && (inputs.theme || 'main') || github.ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -58,9 +32,6 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

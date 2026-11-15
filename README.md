@@ -51,11 +51,3 @@ are old prints: the home comet is a wood engraving of the Great Comet of 1843 fr
 *Illustrated London News*, scanned by
 Wellcome Collection (CC BY 4.0, credited on the page); the footer waves are
 from *Picturesque America*, 1872 (public domain, via Wikimedia Commons).
-
-## Themes
-
-`main` is the live site; every push to it deploys. Other designs can be kept
-on their own branches (`theme/<name>`); they are saved, never deployed by a
-push. To try one live on purpose: Actions -> *Deploy site* -> *Run workflow*,
-pick its branch under "Use workflow from" and press Run. The next push to
-`main` (or a run from `main`) puts the main design back.
