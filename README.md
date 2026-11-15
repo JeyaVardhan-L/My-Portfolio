@@ -61,9 +61,11 @@ a time, and the others stay saved untouched.
 - **Start a theme:** branch from `main` as `theme/<name>` and redesign there.
   Pushes to it never touch the live site.
 - **Put a theme live:** GitHub -> Actions -> *Deploy site* -> *Run workflow*,
-  type the branch (`main` or `theme/<name>`). Then set the repository variable
-  `LIVE_THEME` to that branch (Settings -> Secrets and variables -> Actions ->
-  Variables) so later pushes to it keep deploying.
+  pick the theme's branch under "Use workflow from" and press Run. Pages only
+  deploys from `main`, so that run hands the job to `main`: a second run
+  appears a few seconds later and does the build and deploy. Then set the
+  repository variable `LIVE_THEME` to that branch (Settings -> Secrets and
+  variables -> Actions -> Variables) so later pushes to it keep deploying.
 - **Switch back:** run the workflow again with the other branch and update
   `LIVE_THEME`.
 
