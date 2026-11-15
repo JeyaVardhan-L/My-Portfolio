@@ -47,5 +47,7 @@ npm run check    # what CI runs before deploying
 Code: MIT (see `LICENSE`). Writing, photos and project images: © Lekkala
 Jeyavardhan, all rights reserved. Inter Tight, IBM Plex Mono and Instrument
 Serif are under the SIL Open Font License. The engravings in `src/assets/art/`
-are public domain (Wikimedia Commons: *The Indian Empire*, c. 1860, and
-*Picturesque America*, 1872).
+are old prints: the home comet is a wood engraving of the Great Comet of 1843 from the
+*Illustrated London News*, scanned by
+Wellcome Collection (CC BY 4.0, credited on the page); the footer waves are
+from *Picturesque America*, 1872 (public domain, via Wikimedia Commons).

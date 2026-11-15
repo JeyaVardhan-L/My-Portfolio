@@ -125,8 +125,9 @@ real ones. Commit as `Add inspiration`.
   hardware side). No other colours.
 - Engravings are plain black-on-white greyscale images; CSS blend modes turn
   them blue (`.art` in `src/styles/global.css`). To swap one, use a public-domain
-  engraving, convert it to greyscale with a white sky, and update its credit in
-  `src/site.ts`.
+  (or CC BY, credited) wood or steel engraving: scenery with ruled, line-cut
+  skies, not objects or diagrams. Convert it to greyscale, fade its top edge to
+  white, and update its credit in `src/site.ts`.
 - Instrument Serif for the name and section headings, Inter Tight for text,
   IBM Plex Mono for small uppercase labels.
 - Square corners, hairline rules, no shadows on page elements, no vertical

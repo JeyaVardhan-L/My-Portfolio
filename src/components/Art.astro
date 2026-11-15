@@ -12,6 +12,6 @@ const { src, variant, eager = false } = Astro.props;
 
 <div class:list={['art', `art--${variant}`]} aria-hidden="true">
   <div class="art-in">
-    <Image src={src} alt="" widths={[960, 1600, 2400]} sizes="100vw" loading={eager ? 'eager' : 'lazy'} />
+    <Image src={src} alt="" widths={[960, 1600, 2000]} quality={72} sizes="100vw" loading={eager ? 'eager' : 'lazy'} />
   </div>
 </div>

@@ -27,7 +27,7 @@ export const SITE = {
 
   // Credits for the engravings in src/assets/art/ (change these if you swap the pictures)
   art: {
-    hero: 'Fig. 01 — Himalayan view, steel engraving, c. 1860',
+    hero: 'Fig. 01 — Great Comet of 1843, Illustrated London News · Wellcome Collection, CC BY 4.0',
     footer: 'Waves, wood engraving from Picturesque America, 1872',
   },
 
