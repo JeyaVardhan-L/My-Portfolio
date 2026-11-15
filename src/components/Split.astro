@@ -1,0 +1,13 @@
+---
+interface Props {
+  left: string;
+  right: string;
+}
+const { left, right } = Astro.props;
+---
+
+<h2 class="split">
+  <span>{left}</span>
+  <i aria-hidden="true"></i>
+  <span>{right}</span>
+</h2>

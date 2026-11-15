@@ -9,31 +9,40 @@ const swCount = projects.filter((p) => onSide(p, 'software')).length;
 const hwCount = projects.filter((p) => onSide(p, 'hardware')).length;
 ---
 
-<Base title="Work" description={`Projects by ${SITE.name}: systems software, robotics, computer vision, XR and hardware.`}>
-  <header class="wrap page-head">
-    <p class="label">
-      Work · <span class="sw-only">Software side</span><span class="hw-only">Hardware side</span>
+<Base title="Work" description={`Projects by ${SITE.name}: systems software, robotics, vision, XR and hardware.`}>
+  <header class="wrap head">
+    <p class="label rise">
+      Index · <span class="sw-only">Software side · {swCount} projects</span><span class="hw-only">Hardware side · {hwCount} projects</span>
     </p>
-    <h1>Things I've built.</h1>
-    <p class="lede sw-only">
-      Software, and the projects where software drives hardware. {swCount} so far, with the ones I'd show you first at the top.
-      <button class="inline-btn" type="button" data-side-set="hardware">See the hardware side</button>
-    </p>
-    <p class="lede hw-only">
-      The projects with solder on them. {hwCount} so far.
-      <button class="inline-btn" type="button" data-side-set="software">See the software side</button>
+    <h1 class="display rise" style="--i: 1">Work</h1>
+    <p class="lede rise" style="--i: 2">
+      <span class="sw-only">Software, and the projects where software and hardware meet.</span>
+      <span class="hw-only">Things with wires, motors and solder, and the code that runs them.</span>
+      Use the switch at the top to see the other side.
     </p>
   </header>
   <section class="wrap">
     <ProjectList items={projects} filterBySide />
     <p class="label after">
-      Smaller experiments and coursework live on <a href={SITE.github}>GitHub ↗</a>
+      Smaller experiments and coursework live on <a href={SITE.github}>GitHub</a>.
     </p>
   </section>
 </Base>
 
 <style>
+  .head {
+    padding-block: clamp(48px, 9vw, 112px) 56px;
+  }
+
+  .head .display {
+    margin-top: 24px;
+  }
+
+  .head .lede {
+    margin-top: 28px;
+  }
+
   .after {
-    margin-top: 2rem;
+    margin-top: 24px;
   }
 </style>

@@ -8,12 +8,26 @@ const posts = await getPosts();
 ---
 
 <Base title="Writing" description={`Notes from building things, by ${SITE.name}.`}>
-  <header class="wrap page-head">
-    <p class="label">Writing · {posts.length} pieces · <a href={url('/rss.xml')}>RSS</a></p>
-    <h1>Notes from building things.</h1>
-    <p class="lede">What I tried, what broke and what I learned. Open one and it reads right here.</p>
+  <header class="wrap head">
+    <p class="label rise">Index · {posts.length} pieces · <a href={url('/rss.xml')}>RSS</a></p>
+    <h1 class="display rise" style="--i: 1">Writing</h1>
+    <p class="lede rise" style="--i: 2">Notes from building things: what I tried, what broke and what I learned. Open one and it reads right here.</p>
   </header>
   <section class="wrap">
     {posts.length > 0 ? <WritingList items={posts} /> : <p class="label">Nothing here yet.</p>}
   </section>
 </Base>
+
+<style>
+  .head {
+    padding-block: clamp(48px, 9vw, 112px) 56px;
+  }
+
+  .head .display {
+    margin-top: 24px;
+  }
+
+  .head .lede {
+    margin-top: 28px;
+  }
+</style>

@@ -1,0 +1,17 @@
+---
+import { diagramOf } from '../lib/site';
+
+interface Props {
+  id: string;
+}
+
+// Inline the project's own diagram.svg. Element ids are made unique so the
+// same diagram can appear more than once on a page.
+const g = globalThis as unknown as { __dg?: number };
+g.__dg = (g.__dg ?? 0) + 1;
+const n = g.__dg;
+const raw = diagramOf(Astro.props.id);
+const svg = raw?.replace(/(id="|#)u-/g, `$1u${n}-`);
+---
+
+{svg && <Fragment set:html={svg} />}

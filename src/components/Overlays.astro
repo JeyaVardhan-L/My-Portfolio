@@ -33,7 +33,7 @@ const json = JSON.stringify(items).replace(/</g, '\\u003c');
   <div class="peek-bar"><i></i><i></i><i></i><span data-peek-title></span></div>
   <div class="peek-media">
     <img data-peek-img alt="" decoding="async" />
-    <div class="peek-card dotgrid" data-peek-card></div>
+    <div class="peek-card" data-peek-card></div>
   </div>
 </div>
 
@@ -85,9 +85,9 @@ const json = JSON.stringify(items).replace(/</g, '\\u003c');
     width: 300px;
     border-radius: 10px;
     overflow: hidden;
-    background: var(--paper);
+    background: var(--bg);
     border: 1px solid var(--rule);
-    box-shadow: var(--shadow);
+    box-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.45);
     pointer-events: none;
     opacity: 0;
     transform: translate3d(-9999px, 0, 0);
@@ -105,7 +105,7 @@ const json = JSON.stringify(items).replace(/</g, '\\u003c');
     gap: 5px;
     padding: 7px 10px;
     border-bottom: 1px solid var(--rule);
-    background: var(--paper-2);
+    background: var(--bg-2);
   }
 
   .peek-bar i {
@@ -130,13 +130,18 @@ const json = JSON.stringify(items).replace(/</g, '\\u003c');
   .peek-media {
     position: relative;
     aspect-ratio: 16 / 10;
-    background: var(--paper-2);
+    background: var(--plate);
   }
 
   .peek-media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .peek.drawn .peek-media img {
+    object-fit: contain;
+    padding: 5%;
   }
 
   .peek-media img:not([src]) {
@@ -163,7 +168,7 @@ const json = JSON.stringify(items).replace(/</g, '\\u003c');
   }
 
   .peek-card b {
-    font-family: var(--serif);
+    font-family: var(--sans);
     font-weight: 400;
     font-size: 1.35rem;
     letter-spacing: -0.01em;
@@ -214,7 +219,7 @@ const json = JSON.stringify(items).replace(/</g, '\\u003c');
     height: min(88dvh, 940px);
     display: flex;
     flex-direction: column;
-    background: var(--paper);
+    background: var(--bg);
     color: var(--ink);
     border: 1px solid var(--rule);
     border-radius: 12px;
@@ -230,7 +235,7 @@ const json = JSON.stringify(items).replace(/</g, '\\u003c');
     gap: 1rem;
     padding: 0.7rem 0.9rem;
     border-bottom: 1px solid var(--rule);
-    background: var(--paper-2);
+    background: var(--bg-2);
     flex: none;
   }
 
@@ -332,7 +337,7 @@ const json = JSON.stringify(items).replace(/</g, '\\u003c');
     padding: 0;
     border: 1px solid var(--rule);
     border-radius: 12px;
-    background: var(--paper);
+    background: var(--bg);
     color: var(--ink);
     box-shadow: 0 40px 120px -30px rgb(0 0 0 / 0.5);
     overflow: hidden;
@@ -361,7 +366,7 @@ const json = JSON.stringify(items).replace(/</g, '\\u003c');
     border-bottom: 1px solid var(--rule);
     background: transparent;
     color: var(--ink);
-    font: 1.15rem/1.3 var(--serif);
+    font: 1.15rem/1.3 var(--sans);
     outline: none;
   }
 

@@ -26,7 +26,7 @@ const INK = (() => {
 function syncUI() {
   const hw = getSide() === 'hardware';
   document.querySelectorAll('[data-side-switch]').forEach((b) => b.setAttribute('aria-checked', String(hw)));
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', hw ? '#0b0b0a' : '#f7f6f2');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', hw ? '#0b0b0b' : '#e8e6e0');
 }
 
 function apply(next: Side) {

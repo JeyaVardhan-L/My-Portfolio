@@ -1,0 +1,26 @@
+---
+interface Props {
+  label: string;
+  href?: string;
+  ghost?: boolean;
+  class?: string;
+  [key: `data-${string}`]: string | undefined;
+}
+
+const { label, href, ghost = false, class: cls, ...rest } = Astro.props;
+const external = href ? /^https?:/.test(href) : false;
+---
+
+{
+  href ? (
+    <a class:list={['btn', { 'btn--ghost': ghost }, cls]} href={href} rel={external ? 'noopener' : undefined} {...rest}>
+      <span>{label}</span>
+      <i aria-hidden="true">/</i>
+    </a>
+  ) : (
+    <button type="button" class:list={['btn', { 'btn--ghost': ghost }, cls]} {...rest}>
+      <span>{label}</span>
+      <i aria-hidden="true">/</i>
+    </button>
+  )
+}

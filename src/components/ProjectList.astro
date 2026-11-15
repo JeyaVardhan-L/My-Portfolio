@@ -1,55 +1,50 @@
 ---
 import { getImage } from 'astro:assets';
-import { onSide, pad, sideClass, sideShort, url, year, type Project } from '../lib/site';
+import { diagramUrlOf, onSide, pad, sideClass, sideShort, url, year, type Project } from '../lib/site';
 
 interface Props {
   items: Project[];
-
   filterBySide?: boolean;
 }
 
 const { items, filterBySide = false } = Astro.props;
+
 let swN = 0;
 let hwN = 0;
-const nums = items.map((p) => ({ sw: onSide(p, 'software') ? ++swN : 0, hw: onSide(p, 'hardware') ? ++hwN : 0 }));
+const nums = items.map((p) => ({
+  sw: onSide(p, 'software') ? ++swN : 0,
+  hw: onSide(p, 'hardware') ? ++hwN : 0,
+}));
 
 const rows = await Promise.all(
   items.map(async (p, i) => {
-    const img = p.data.cover ? await getImage({ src: p.data.cover, width: 640, format: 'webp' }) : null;
-    const lines = p.data.specs.slice(0, 3).map((s) => `${s.label}: ${s.value}`);
-    return { p, n: nums[i], img: img?.src, lines: JSON.stringify(lines) };
+    const img = p.data.cover
+      ? (await getImage({ src: p.data.cover, width: 720, format: 'webp' })).src
+      : diagramUrlOf(p.id);
+    return { p, n: nums[i], img, drawn: !p.data.cover };
   }),
 );
 ---
 
-<ol class="plist">
+<ol class="pl">
   {
-    rows.map(({ p, n, img, lines }) => (
-      <li class:list={['prow', filterBySide && sideClass(p.data.side)]}>
-        <a
-          class="prow-link"
-          href={url(`/projects/${p.id}/`)}
-          data-peek-title={p.data.title}
-          data-peek-img={img}
-          data-peek-lines={lines}
-        >
-          <span class="prow-n label">
+    rows.map(({ p, n, img, drawn }) => (
+      <li class:list={['pr', filterBySide && sideClass(p.data.side)]}>
+        <a href={url(`/projects/${p.id}/`)} data-peek-title={p.data.title} data-peek-img={img} data-peek-drawn={drawn ? '' : undefined}>
+          <span class="label pr-n">
             {n.sw > 0 && <span class="sw-only">{pad(n.sw)}</span>}
             {n.hw > 0 && <span class="hw-only">{pad(n.hw)}</span>}
           </span>
-          <span class="prow-main">
-            <span class="prow-title">
-              {p.data.title}
-              {p.data.status === 'in progress' && <span class="prow-status label">in progress</span>}
-            </span>
-            <span class="prow-sum">{p.data.summary}</span>
+          <span class="pr-main">
+            <span class="pr-title">{p.data.title}</span>
+            <span class="pr-sum">{p.data.summary}</span>
           </span>
-          <span class="prow-meta label">
-            <span>{sideShort[p.data.side]}</span>
-            <span>{year(p.data.date)}</span>
+          <span class="label pr-meta">
+            <span>{sideShort[p.data.side]} · {year(p.data.date)}</span>
+            {p.data.status === 'in progress' && <span class="pr-flag">In progress</span>}
           </span>
-          <span class="prow-arrow" aria-hidden="true">
-            →
+          <span class="pr-go" aria-hidden="true">
+            /
           </span>
         </a>
       </li>
@@ -58,109 +53,88 @@ const rows = await Promise.all(
 </ol>
 
 <style>
-  .plist {
+  .pl {
     list-style: none;
     margin: 0;
     padding: 0;
-  }
-
-  .prow {
     border-bottom: 1px solid var(--rule);
   }
 
-  .prow-link {
-    position: relative;
-    isolation: isolate;
+  .pr a {
     display: grid;
-    grid-template-columns: 3rem minmax(0, 1fr) auto 1.25rem;
+    grid-template-columns: 56px minmax(0, 1fr) 180px 28px;
+    gap: 16px;
     align-items: baseline;
-    gap: 1.25rem;
-    padding: 1.6rem 0.5rem;
+    padding: 28px 0;
+    border-top: 1px solid var(--rule);
     text-decoration: none;
   }
 
-  .prow-link::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: var(--accent-soft);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.6s var(--ease-out);
-  }
-
-  .prow-link:hover::before,
-  .prow-link:focus-visible::before {
-    transform: scaleX(1);
-  }
-
-  .prow-title {
+  .pr-title {
     display: block;
-    font-size: clamp(1.35rem, 1.1rem + 0.9vw, 1.85rem);
-    line-height: 1.15;
-    letter-spacing: -0.015em;
-    transition: transform 0.6s var(--ease-out);
+    font-size: clamp(26px, 2.9vw, 42px);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    transition: color 0.3s, transform 0.6s var(--ease);
   }
 
-  .prow-link:hover .prow-title {
-    transform: translateX(0.4rem);
+  .pr a:hover .pr-title {
+    color: var(--accent);
+    transform: translateX(10px);
   }
 
-  .prow-status {
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 0.6rem;
-    padding: 0.1rem 0.4rem;
-    border: 1px solid var(--rule);
-    border-radius: 3px;
+  .pr-sum {
+    display: block;
+    margin-top: 10px;
+    max-width: 40em;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .pr-meta {
+    display: grid;
+    gap: 4px;
+    text-align: right;
+  }
+
+  .pr-flag {
     color: var(--accent);
   }
 
-  .prow-sum {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    max-width: 44rem;
-    margin-top: 0.4rem;
+  .pr-go {
+    justify-self: end;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    font: 500 12px/1 var(--mono);
     color: var(--muted);
-    font-size: 0.95em;
-    line-height: 1.5;
+    box-shadow: inset 0 0 0 1px var(--rule);
+    transition: background 0.3s, color 0.3s, box-shadow 0.3s;
   }
 
-  .prow-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.25rem;
-    white-space: nowrap;
+  .pr a:hover .pr-go {
+    background: var(--indigo);
+    color: #fff;
+    box-shadow: none;
   }
 
-  .prow-arrow {
-    color: var(--muted);
-    transition: transform 0.5s var(--ease-out), color 0.3s;
-  }
-
-  .prow-link:hover .prow-arrow {
-    color: var(--ink);
-    transform: translateX(4px);
-  }
-
-  @media (max-width: 640px) {
-    .prow-link {
-      grid-template-columns: 2.25rem minmax(0, 1fr);
-      gap: 0.4rem 0.75rem;
-      padding-block: 1.3rem;
+  @media (max-width: 720px) {
+    .pr a {
+      grid-template-columns: 36px minmax(0, 1fr);
+      gap: 10px;
+      padding-block: 22px;
     }
 
-    .prow-meta {
+    .pr-meta {
       grid-column: 2;
-      flex-direction: row;
-      gap: 0.9rem;
+      text-align: left;
+      display: flex;
+      gap: 12px;
     }
 
-    .prow-arrow {
+    .pr-go {
       display: none;
     }
   }

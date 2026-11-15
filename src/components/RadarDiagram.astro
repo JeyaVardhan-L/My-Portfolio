@@ -3,13 +3,12 @@ const blips = [
   { x: 205, y: 95, b: 0.35 },
   { x: 230, y: 205, b: 1.3 },
   { x: 108, y: 220, b: 2.5 },
-  { x: 120, y: 120, b: 3.4 },
 ];
 ---
 
-<svg class="diagram anim" viewBox="0 0 320 320" role="img" aria-labelledby="rd-title">
+<svg class="dg anim" viewBox="0 0 320 320" role="img" aria-labelledby="rd-title">
   <title id="rd-title">An empty radar scope with a sweeping beam</title>
-  <g class="ln thin">
+  <g class="dg-ln dg-thin">
     <circle cx="160" cy="160" r="140"></circle>
     <circle cx="160" cy="160" r="100"></circle>
     <circle cx="160" cy="160" r="60"></circle>
@@ -18,21 +17,14 @@ const blips = [
   </g>
   <g>
     <animateTransform attributeName="transform" type="rotate" from="0 160 160" to="360 160 160" dur="4s" repeatCount="indefinite"></animateTransform>
-    <path class="sweep" d="M160 160 L160 20 A140 140 0 0 0 90 38.76 Z"></path>
-    <path class="ln" d="M160 160 V20"></path>
+    <path class="dg-sweep" d="M160 160 L160 20 A140 140 0 0 0 90 38.76 Z"></path>
+    <path class="dg-ln" d="M160 160 V20"></path>
   </g>
   {
     blips.map((p) => (
-      <circle class="fillc" cx={p.x} cy={p.y} r="3.5" opacity="0">
+      <circle class="dg-fc" cx={p.x} cy={p.y} r="3.5" opacity="0">
         <animate attributeName="opacity" values="0;1;0" keyTimes="0;0.05;1" dur="4s" begin={`${p.b}s`} repeatCount="indefinite" />
       </circle>
     ))
   }
 </svg>
-
-<style>
-  .sweep {
-    fill: currentColor;
-    fill-opacity: 0.12;
-  }
-</style>

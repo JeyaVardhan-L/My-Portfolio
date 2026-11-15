@@ -7,10 +7,11 @@ export const SITE = {
   nameTe: 'జయవర్ధన్',
   location: 'Visakhapatnam, India',
   locationTe: 'విశాఖపట్నం',
+  coords: '17.69° N, 83.22° E',
   description:
-    'Jeya Vardhan writes low-level and real-time software, and builds the hardware it runs on.',
+    'Jeya Vardhan builds systems software and the hardware it runs on: shells, perception pipelines, vision models, rockets, wearables and robots.',
 
-  // The "Now" line on the home page.
+  // The "Now" band on the home page.
   now: 'Learning how transformers work, one attention head at a time.',
 
   email: '',
@@ -18,18 +19,19 @@ export const SITE = {
   linkedin: '',
   resume: '', // e.g. '/resume.pdf' after adding public/resume.pdf
 
+  // The two sides of the home page. Neither is the "main" one.
   intro: {
     software: {
-      kicker: 'Jeya Vardhan · Software side',
-      headline: 'Software for things that <em>move</em>.',
-      body:
-        "I'm Jeya, a computer science student in Visakhapatnam. I write low-level and real-time code: a Unix shell in C, LiDAR odometry that has to finish inside 100 ms, a detector that tells drones from birds, and AR and VR tools in Unity.",
+      label: 'Software side',
+      fields: 'Systems · Robotics · Vision · XR',
+      statement:
+        'I write systems software: a Unix shell in C, LiDAR odometry racing a 10 Hz clock, a model that tells drones from birds, and AR and VR tools.',
     },
     hardware: {
-      kicker: 'Jeya Vardhan · Hardware side',
-      headline: 'And the things it <em>runs on</em>.',
-      body:
-        'A smaller corner of my work, with solder on it: a rocket that steers its own thrust, a mouse you wear on your hand, flight telemetry from a three-dollar board, and a soccer robot with 43-amp motor drivers.',
+      label: 'Hardware side',
+      fields: 'Rockets · Wearables · Robots · Telemetry',
+      statement:
+        'I build hardware: a rocket that steers its own thrust, a mouse you wear on your hand, flight telemetry on a Blue Pill and a soccer robot with 43 A drivers.',
     },
   },
 

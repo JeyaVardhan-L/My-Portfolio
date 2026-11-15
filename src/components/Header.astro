@@ -1,22 +1,23 @@
 ---
-import { SITE } from '../site';
 import { url } from '../lib/site';
+import { SITE } from '../site';
 
 const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
 const path = Astro.url.pathname.slice(base.length) || '/';
 const links = [
-  { href: '/projects/', label: 'work' },
-  { href: '/writing/', label: 'writing' },
-  { href: '/about/', label: 'about' },
+  { href: '/projects/', label: 'Work' },
+  { href: '/writing/', label: 'Writing' },
+  { href: '/about/', label: 'About' },
 ];
 ---
 
-<header class="site-header">
-  <div class="wrap bar">
-    <a class="brand" href={url('/')}>
-      {SITE.name}
+<header class="hd">
+  <div class="wrap hd-bar">
+    <a class="hd-brand" href={url('/')}>
+      <i aria-hidden="true"></i>
+      <span>{SITE.name}</span>
     </a>
-    <nav class="nav" aria-label="Primary">
+    <nav class="hd-nav" aria-label="Primary">
       {
         links.map((l) => (
           <a href={url(l.href)} aria-current={path.startsWith(l.href) ? 'page' : undefined}>
@@ -25,157 +26,129 @@ const links = [
         ))
       }
     </nav>
-    <div class="tools">
-      <button class="kbd" type="button" data-palette-open aria-label="Open the quick menu" title="Quick menu">
-        <span aria-hidden="true">⌘K</span>
-      </button>
-      <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Hardware side" data-side-switch>
-        <span class="opt opt-sw" aria-hidden="true">Software</span>
-        <span class="opt opt-hw" aria-hidden="true">Hardware</span>
-        <span class="thumb" aria-hidden="true"></span>
+    <div class="hd-tools">
+      <button class="hd-k" type="button" data-palette-open aria-label="Open the quick menu" title="Quick menu">⌘K</button>
+      <button class="hd-switch" type="button" role="switch" aria-checked="false" aria-label="Hardware side" data-side-switch>
+        <span class="o o-sw" aria-hidden="true">Software</span>
+        <span class="o o-hw" aria-hidden="true">Hardware</span>
       </button>
     </div>
   </div>
 </header>
 
 <style>
-  .site-header {
+  .hd {
     position: relative;
     z-index: 20;
-    padding-top: clamp(1.25rem, 3vw, 2rem);
   }
 
-  .bar {
+  .hd-bar {
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: 1rem 2rem;
+    gap: 12px 32px;
+    padding-block: 20px;
+    border-bottom: 1px solid var(--rule);
+    font: 400 11px/1 var(--mono);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
   }
 
-  .brand {
-    font-family: var(--sans);
-    font-size: 1.05rem;
-    letter-spacing: 0.12em;
-    text-decoration: none;
-    white-space: nowrap;
-  }
-
-  .nav {
-    display: flex;
-    justify-content: flex-end;
-    gap: clamp(1.1rem, 2.5vw, 2rem);
-    font-family: var(--sans);
-    font-size: 0.98rem;
-    letter-spacing: 0.1em;
-  }
-
-  .nav a {
-    text-decoration: none;
-    color: var(--muted);
-    position: relative;
-  }
-
-  .nav a:hover,
-  .nav a[aria-current='page'] {
-    color: var(--ink);
-  }
-
-  .nav a[aria-current='page']::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0.1em;
-    bottom: -0.3em;
-    height: 1px;
-    background: currentColor;
-  }
-
-  .tools {
+  .hd-brand {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 10px;
+    text-decoration: none;
   }
 
-  .kbd {
-    font-family: var(--mono);
-    font-size: 0.68rem;
+  .hd-brand i {
+    width: 11px;
+    height: 11px;
+    background: var(--indigo);
+  }
+
+  :global([data-side='hardware']) .hd-brand i {
+    background: var(--bone);
+  }
+
+  .hd-nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: clamp(16px, 2.6vw, 32px);
+  }
+
+  .hd-nav a {
+    text-decoration: none;
     color: var(--muted);
-    border: 1px solid var(--rule);
-    border-radius: 5px;
-    padding: 0.3rem 0.45rem;
-    line-height: 1;
-    transition: color 0.2s, border-color 0.2s;
   }
 
-  .kbd:hover {
-    color: var(--ink);
-    border-color: var(--ink);
-  }
-
-  .switch {
-    position: relative;
-    display: inline-grid;
-    grid-template-columns: 1fr 1fr;
-    border: 1px solid var(--ink);
-    border-radius: 999px;
-    padding: 3px;
-    font-family: var(--mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    isolation: isolate;
-  }
-
-  .opt {
-    position: relative;
-    z-index: 1;
-    padding: 0.38rem 0.7rem;
-    text-align: center;
-    color: var(--muted);
-    transition: color 0.3s;
-  }
-
-  :global([data-side='software']) .switch:hover .opt-hw,
-  :global([data-side='hardware']) .switch:hover .opt-sw {
+  .hd-nav a:hover,
+  .hd-nav a[aria-current='page'] {
     color: var(--ink);
   }
 
-  .thumb {
-    position: absolute;
-    top: 3px;
-    bottom: 3px;
-    left: 3px;
-    width: calc(50% - 3px);
-    border-radius: 999px;
+  .hd-nav a[aria-current='page']::before {
+    content: '/';
+    margin-right: 4px;
+    color: var(--accent);
+  }
+
+  .hd-tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hd-k {
+    padding: 7px 8px;
+    color: var(--muted);
+    box-shadow: inset 0 0 0 1px var(--rule);
+    transition: color 0.2s, box-shadow 0.2s;
+  }
+
+  .hd-k:hover {
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1px var(--ink);
+  }
+
+  .hd-switch {
+    display: inline-flex;
+    box-shadow: inset 0 0 0 1px var(--ink);
+  }
+
+  .o {
+    padding: 7px 10px;
+    color: var(--muted);
+    transition: background 0.4s var(--ease), color 0.4s var(--ease);
+  }
+
+  :global([data-side='software']) .o-sw,
+  :global([data-side='hardware']) .o-hw {
     background: var(--ink);
-    z-index: 0;
-    transition: transform 0.6s var(--ease-out);
+    color: var(--bg);
   }
 
-  :global([data-side='software']) .opt-sw,
-  :global([data-side='hardware']) .opt-hw {
-    color: var(--paper);
-  }
-
-  :global([data-side='hardware']) .thumb {
-    transform: translateX(100%);
+  :global([data-side='software']) .hd-switch:hover .o-hw,
+  :global([data-side='hardware']) .hd-switch:hover .o-sw {
+    color: var(--ink);
   }
 
   @media (hover: none), (pointer: coarse) {
-    .kbd {
+    .hd-k {
       display: none;
     }
   }
 
   @media (max-width: 720px) {
-    .bar {
+    .hd-bar {
       grid-template-columns: 1fr auto;
     }
 
-    .nav {
+    .hd-nav {
       grid-column: 1 / -1;
       grid-row: 2;
       justify-content: flex-start;
+      padding-top: 6px;
     }
   }
 </style>

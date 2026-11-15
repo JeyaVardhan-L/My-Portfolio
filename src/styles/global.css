@@ -1,71 +1,99 @@
-@import '@fontsource-variable/newsreader';
-@import '@fontsource-variable/newsreader/wght-italic.css';
-@import '@fontsource-variable/jost';
+@import '@fontsource-variable/inter-tight';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource/instrument-serif/400.css';
+@import '@fontsource/instrument-serif/400-italic.css';
 
-@font-face {
-  font-family: 'Departure Mono';
-  src: url('../assets/fonts/DepartureMono-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ───────────────────────── tokens ───────────────────────── */
+/* ───────────────────────── tokens ─────────────────────────
+   Bone paper, black ink, one indigo. The hardware side is the
+   same system inverted: black paper, bone ink, putty rooms. */
 
 :root {
-  --serif: 'Newsreader Variable', 'Iowan Old Style', Georgia, serif;
-  --sans: 'Jost Variable', Futura, 'Avenir Next', system-ui, sans-serif;
-  --mono: 'Departure Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --sans: 'Inter Tight Variable', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  --serif: 'Instrument Serif', 'Times New Roman', serif;
 
-  --measure: 40rem;
-  --wide: 72rem;
-  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --wide: 1240px;
+  --gutter: clamp(20px, 4vw, 48px);
+  --gap: clamp(96px, 12vw, 168px);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --indigo: #1925aa;
+  --bone: #e8e6e0;
+  --putty: #c4c3b6;
+  --black: #0b0b0b;
 
-  /* software side: paper and blueprint ink */
-  --paper: #f7f6f2;
-  --paper-2: #efede6;
-  --ink: #141413;
-  --ink-2: #3b3a37;
-  --muted: #6b6963;
-  --rule: #dcd9d0;
-  --accent: #2b4fe0;
-  --accent-soft: rgb(43 79 224 / 0.08);
-  --line: #2b4fe0;
-  --line-fill: rgb(43 79 224 / 0.07);
-  --grid: rgb(43 79 224 / 0.17);
-  --shadow: 0 1px 0 rgb(0 0 0 / 0.04), 0 22px 60px -24px rgb(20 20 19 / 0.38);
+  --bg: var(--bone);
+  --bg-2: #dedbd3;
+  --ink: var(--black);
+  --ink-2: #2b2a28;
+  --muted: #5f5d57;
+  --rule: rgb(11 11 11 / 0.14);
+  --plate: var(--putty);
+  --line: var(--indigo);
+  --accent: var(--indigo);
+
+  --inv-bg: var(--black);
+  --inv-bg-2: #171716;
+  --inv-ink: var(--bone);
+  --inv-ink-2: #cfccc5;
+  --inv-muted: #8d8b85;
+  --inv-rule: rgb(232 230 224 / 0.16);
+  --inv-plate: #1b1b19;
+  --inv-line: var(--bone);
+  --inv-accent: #9ea6ff;
+
   color-scheme: light;
 }
 
-/* hardware side: black and white */
 :root[data-side='hardware'] {
-  --paper: #0b0b0a;
-  --paper-2: #161614;
-  --ink: #f1f0ec;
-  --ink-2: #cfcdc7;
-  --muted: #908e88;
-  --rule: #2b2a27;
-  --accent: #f1f0ec;
-  --accent-soft: rgb(241 240 236 / 0.08);
-  --line: #f1f0ec;
-  --line-fill: rgb(241 240 236 / 0.05);
-  --grid: rgb(241 240 236 / 0.13);
-  --shadow: 0 1px 0 rgb(255 255 255 / 0.05), 0 28px 70px -24px rgb(0 0 0 / 0.95);
+  --bg: var(--black);
+  --bg-2: #171716;
+  --ink: var(--bone);
+  --ink-2: #cfccc5;
+  --muted: #8d8b85;
+  --rule: rgb(232 230 224 / 0.16);
+  --plate: #1b1b19;
+  --line: var(--bone);
+  --accent: #9ea6ff;
+
+  --inv-bg: var(--putty);
+  --inv-bg-2: #b9b8ab;
+  --inv-ink: var(--black);
+  --inv-ink-2: #2b2a28;
+  --inv-muted: #4c4b45;
+  --inv-rule: rgb(11 11 11 / 0.16);
+  --inv-plate: #b4b3a5;
+  --inv-line: var(--indigo);
+  --inv-accent: var(--indigo);
+
   color-scheme: dark;
+}
+
+/* an inverted "room": black on the software side, putty on the hardware side */
+.inv {
+  --bg: var(--inv-bg);
+  --bg-2: var(--inv-bg-2);
+  --ink: var(--inv-ink);
+  --ink-2: var(--inv-ink-2);
+  --muted: var(--inv-muted);
+  --rule: var(--inv-rule);
+  --plate: var(--inv-plate);
+  --line: var(--inv-line);
+  --accent: var(--inv-accent);
+  background: var(--bg);
+  color: var(--ink);
 }
 
 /* the inspiration room is always dark */
 .darkroom {
-  --paper: #060607;
-  --paper-2: #121214;
-  --ink: #e9e7e2;
-  --ink-2: #c9c7c1;
-  --muted: #8a8882;
-  --rule: #26262a;
-  --accent: #e9e7e2;
-  --accent-soft: rgb(233 231 226 / 0.08);
+  --bg: #060607;
+  --bg-2: #141414;
+  --ink: var(--bone);
+  --ink-2: #cfccc5;
+  --muted: #8d8b85;
+  --rule: rgb(232 230 224 / 0.16);
+  --accent: #9ea6ff;
   color-scheme: dark;
 }
 
@@ -79,11 +107,11 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   scrollbar-gutter: stable;
-  background: var(--paper);
+  background: var(--bg);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -94,15 +122,13 @@ html {
 
 body {
   margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--serif);
-  font-size: clamp(1.0625rem, 0.98rem + 0.3vw, 1.1875rem);
-  line-height: 1.6;
-  font-optical-sizing: auto;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 17px/1.5 var(--sans);
+  letter-spacing: -0.005em;
   overflow-x: clip;
 }
 
@@ -122,7 +148,7 @@ a {
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
   text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
-  transition: text-decoration-color 0.2s, color 0.2s;
+  transition: color 0.25s, text-decoration-color 0.25s;
 }
 
 a:hover {
@@ -132,12 +158,11 @@ a:hover {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 2px;
 }
 
 ::selection {
-  background: var(--accent);
-  color: var(--paper);
+  background: var(--indigo);
+  color: var(--bone);
 }
 
 h1,
@@ -145,8 +170,6 @@ h2,
 h3,
 h4 {
   font-weight: 400;
-  line-height: 1.15;
-  letter-spacing: -0.012em;
   margin: 0;
   text-wrap: balance;
 }
@@ -157,6 +180,8 @@ p {
 }
 
 button {
+  text-transform: inherit;
+  letter-spacing: inherit;
   font: inherit;
   color: inherit;
   background: none;
@@ -168,17 +193,16 @@ button {
 .skip {
   position: absolute;
   left: -999px;
-  top: 0.5rem;
-  background: var(--ink);
-  color: var(--paper);
-  padding: 0.5rem 0.75rem;
+  top: 8px;
   z-index: 100;
-  font-family: var(--mono);
-  font-size: 0.8rem;
+  padding: 8px 12px;
+  background: var(--ink);
+  color: var(--bg);
+  font: 500 11px/1 var(--mono);
 }
 
 .skip:focus {
-  left: 0.5rem;
+  left: 8px;
 }
 
 /* ───────────────────────── shared pieces ───────────────────────── */
@@ -191,10 +215,8 @@ button {
 }
 
 .label {
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  line-height: 1.4;
-  letter-spacing: 0.06em;
+  font: 400 11px/1.45 var(--mono);
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -203,95 +225,88 @@ button {
   color: var(--ink);
 }
 
-.lede {
-  font-size: 1.12em;
-  line-height: 1.55;
-  color: var(--ink-2);
-  max-width: 36rem;
-}
-
 .section {
-  padding-top: clamp(4.5rem, 10vw, 8rem);
+  padding-top: var(--gap);
 }
 
-.section-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--rule);
+.lede {
+  font-size: clamp(18px, 1.4vw, 21px);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: var(--ink-2);
+  max-width: 34em;
 }
 
-.section-head h2 {
-  font-size: clamp(1.6rem, 1.2rem + 1.2vw, 2.25rem);
+/* Section heading pair: one word flush left, one flush right, a hairline between */
+.split {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: end;
+  gap: clamp(12px, 2vw, 32px);
+  font: 400 clamp(52px, 10.5vw, 156px) / 0.86 var(--sans);
+  letter-spacing: -0.055em;
 }
 
-.more {
-  font-family: var(--mono);
-  font-size: 0.75rem;
+.split i {
+  justify-self: center;
+  align-self: stretch;
+  width: 1px;
+  background: var(--rule);
+}
+
+.display {
+  font: 400 clamp(60px, 11vw, 168px) / 0.88 var(--sans);
+  letter-spacing: -0.055em;
+}
+
+/* Button: a paper label cell and an indigo square with a slash */
+.btn {
+  display: inline-flex;
+  align-items: stretch;
+  font: 500 11px/1 var(--mono);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   text-decoration: none;
-  color: var(--muted);
+  color: var(--black);
   white-space: nowrap;
 }
 
-.more:hover {
+.btn > span {
+  display: flex;
+  align-items: center;
+  padding: 13px 15px;
+  background: #fff;
+}
+
+.btn > i {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  background: var(--indigo);
+  color: #fff;
+  font-style: normal;
+  transition: width 0.45s var(--ease);
+}
+
+.btn:hover > i,
+.btn:focus-visible > i {
+  width: 56px;
+}
+
+.btn--ghost > span {
+  background: transparent;
   color: var(--ink);
-}
-
-.more span {
-  display: inline-block;
-  transition: transform 0.3s var(--ease-out);
-}
-
-.more:hover span {
-  transform: translateX(3px);
-}
-
-.inline-btn {
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
-  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
-  color: var(--ink);
-}
-
-.inline-btn:hover {
-  text-decoration-color: currentColor;
-}
-
-.dotgrid {
-  background-image: radial-gradient(var(--grid) 1px, transparent 1.3px);
-  background-size: 14px 14px;
+  box-shadow: inset 0 0 0 1px var(--ink);
 }
 
 .tag {
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.04em;
+  font: 400 11px/1 var(--mono);
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--muted);
-  border: 1px solid var(--rule);
-  border-radius: 3px;
-  padding: 0.15rem 0.4rem;
+  padding: 6px 8px;
+  box-shadow: inset 0 0 0 1px var(--rule);
   white-space: nowrap;
-}
-
-.page-head {
-  padding-block: clamp(3.5rem, 9vw, 6.5rem) 2.5rem;
-}
-
-.page-head h1 {
-  margin-top: 1.1rem;
-  font-size: clamp(2.6rem, 1.6rem + 4vw, 4.6rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
-}
-
-.page-head .lede {
-  margin-top: 1.25rem;
 }
 
 /* side-specific visibility (from <html data-side>) */
@@ -300,92 +315,73 @@ button {
   display: none !important;
 }
 
-/* ───────────────────────── diagrams ───────────────────────── */
+/* ───────────────────────── diagrams (also styled inside each SVG) ───────────────────────── */
 
-.diagram {
+.dg {
   width: 100%;
-  height: auto;
-  color: var(--line);
-  overflow: visible;
+  height: 100%;
 }
 
-.diagram .box {
-  fill: var(--line-fill);
-  stroke: currentColor;
-  stroke-width: 1.25;
-}
-
-.diagram .box.solid {
-  fill: var(--paper);
-}
-
-.diagram .ln {
+.dg-ln {
   fill: none;
-  stroke: currentColor;
+  stroke: var(--line);
   stroke-width: 1.25;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-.diagram .thin {
+.dg-thin {
   stroke-width: 0.75;
   opacity: 0.55;
 }
 
-.diagram .dash {
-  stroke-dasharray: 4 5;
+.dg-fc {
+  fill: var(--line);
 }
 
-.diagram .fillc {
-  fill: currentColor;
+.dg-sweep {
+  fill: var(--line);
+  fill-opacity: 0.12;
 }
 
-.diagram .t {
-  font-family: var(--mono);
-  font-size: 13px;
-  fill: var(--ink);
-}
-
-.diagram .s {
+.dg-s {
   font-family: var(--mono);
   font-size: 10px;
   letter-spacing: 0.05em;
   fill: var(--muted);
 }
 
-.diagram .mid {
-  text-anchor: middle;
-}
-
 /* ───────────────────────── posts (also shown inside the reading window) ───────────────────────── */
 
 .post {
-  max-width: var(--measure);
+  max-width: 44rem;
   margin-inline: auto;
 }
 
 .post-head {
-  margin-bottom: 2.5rem;
-  padding-bottom: 2rem;
+  padding-bottom: 32px;
+  margin-bottom: 40px;
   border-bottom: 1px solid var(--rule);
 }
 
 .post-head h1 {
-  margin-top: 0.9rem;
-  font-size: clamp(2rem, 1.4rem + 2.6vw, 3.2rem);
-  line-height: 1.06;
-  letter-spacing: -0.02em;
+  margin-top: 16px;
+  font-size: clamp(34px, 4.4vw, 56px);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
 }
 
 .post-head .lede {
-  margin-top: 1rem;
-  font-style: italic;
+  margin-top: 18px;
 }
 
 /* ───────────────────────── prose ───────────────────────── */
 
 .prose {
-  max-width: var(--measure);
+  max-width: 44rem;
+  font-size: 18px;
+  line-height: 1.62;
+  color: var(--ink-2);
 }
 
 .prose > * + * {
@@ -393,18 +389,27 @@ button {
 }
 
 .prose h2 {
-  font-size: 1.65rem;
   margin-top: 2.2em;
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
 }
 
 .prose h3 {
-  font-size: 1.25rem;
-  margin-top: 1.9em;
+  margin-top: 1.8em;
+  font-size: 21px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
 }
 
 .prose h2 + *,
 .prose h3 + * {
   margin-top: 0.6em;
+}
+
+.prose > :first-child {
+  margin-top: 0;
 }
 
 .prose ul,
@@ -422,14 +427,13 @@ button {
 
 .prose strong {
   font-weight: 600;
+  color: var(--ink);
 }
 
 .prose blockquote {
   margin-inline: 0;
-  padding-left: 1.1em;
+  padding-left: 1em;
   border-left: 2px solid var(--accent);
-  color: var(--ink-2);
-  font-style: italic;
 }
 
 .prose hr {
@@ -440,56 +444,44 @@ button {
 
 .prose :not(pre) > code {
   font-family: var(--mono);
-  font-size: 0.8em;
-  background: var(--accent-soft);
-  padding: 0.12em 0.35em;
-  border-radius: 3px;
+  font-size: 0.82em;
+  padding: 0.1em 0.35em;
+  background: var(--bg-2);
   overflow-wrap: anywhere;
 }
 
 .prose pre {
-  font-family: var(--mono);
-  font-size: 0.78rem;
-  line-height: 1.6;
-  padding: 1.1rem 1.25rem;
-  border: 1px solid var(--rule);
-  border-radius: 6px;
+  font: 400 13px/1.6 var(--mono);
+  padding: 18px 20px;
   overflow-x: auto;
-  background: var(--paper-2) !important;
-}
-
-.prose pre code {
-  font-family: inherit;
+  background: var(--bg-2) !important;
+  box-shadow: inset 0 0 0 1px var(--rule);
 }
 
 .prose img {
-  border-radius: 6px;
-  border: 1px solid var(--rule);
   height: auto;
 }
 
 .prose table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9em;
   display: block;
   overflow-x: auto;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
 }
 
 .prose th,
 .prose td {
+  padding: 10px 18px 10px 0;
   text-align: left;
-  padding: 0.55em 1em 0.55em 0;
-  border-bottom: 1px solid var(--rule);
   vertical-align: top;
+  border-bottom: 1px solid var(--rule);
 }
 
 .prose th {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
+  font: 400 11px/1.4 var(--mono);
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  font-weight: 400;
   color: var(--muted);
 }
 
@@ -504,7 +496,7 @@ button {
   color: var(--shiki-dark);
 }
 
-/* ───────────────────────── page + ink transitions ───────────────────────── */
+/* ───────────────────────── transitions ───────────────────────── */
 
 @view-transition {
   navigation: auto;
@@ -513,7 +505,7 @@ button {
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 0.3s;
-  animation-timing-function: var(--ease-out);
+  animation-timing-function: var(--ease);
 }
 
 /* the side switch: the new side shows through a growing ink blot */
@@ -537,18 +529,16 @@ html.inking::view-transition-new(root) {
   }
 }
 
-/* ───────────────────────── entrance ───────────────────────── */
-
 @media (prefers-reduced-motion: no-preference) {
   .rise {
-    animation: rise 1s var(--ease-out) both;
-    animation-delay: calc(var(--i, 0) * 80ms);
+    animation: rise 1.1s var(--ease) both;
+    animation-delay: calc(var(--i, 0) * 90ms);
   }
 }
 
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(14px);
   }
 }

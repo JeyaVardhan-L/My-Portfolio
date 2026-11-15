@@ -41,6 +41,7 @@ if (peek && fine) {
 
   const fill = (el: HTMLElement) => {
     title.textContent = el.dataset.peekTitle ?? '';
+    peek.classList.toggle('drawn', 'peekDrawn' in el.dataset);
     const src = el.dataset.peekImg;
     if (src) {
       img.src = src;

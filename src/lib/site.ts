@@ -29,6 +29,20 @@ export async function getPosts(): Promise<Post[]> {
   return all.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 }
 
+// A project's own diagram lives at src/content/projects/<slug>/diagram.svg
+const diagramsRaw = import.meta.glob<string>('/src/content/projects/*/diagram.svg', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+});
+const diagramsUrl = import.meta.glob<string>('/src/content/projects/*/diagram.svg', {
+  query: '?url',
+  import: 'default',
+  eager: true,
+});
+export const diagramOf = (id: string) => diagramsRaw[`/src/content/projects/${id}/diagram.svg`];
+export const diagramUrlOf = (id: string) => diagramsUrl[`/src/content/projects/${id}/diagram.svg`];
+
 export const readMinutes = (body = '') =>
   Math.max(1, Math.round(body.trim().split(/\s+/).length / 230));
 

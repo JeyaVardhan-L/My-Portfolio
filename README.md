@@ -10,13 +10,16 @@ GitHub Pages.
 Hand an AI agent (Claude Code or similar) your notes and one of these. The
 rules it follows are in [`AGENTS.md`](AGENTS.md).
 
-> Add this project to my site, following AGENTS.md. Notes: … Repo: …
+> Add this project to my site, following AGENTS.md. Notes: … Repo: … Live site: …
 
 > Add this writing to my site, following AGENTS.md: …
 
 > Move <project> to the top of my projects. / Feature <project> on the home page.
 
 > Change the "Now" line on my home page to: …
+
+Each project is a folder in `src/content/projects/` holding its text, its
+screenshot and, if it has one, its animated diagram.
 
 For inspiration photos, no agent needed: drop images into
 `src/assets/inspiration/`, commit and push.
@@ -41,5 +44,5 @@ npm run check    # what CI runs before deploying
 ## Licence
 
 Code: MIT (see `LICENSE`). Writing, photos and project images: © Lekkala
-Jeyavardhan, all rights reserved. Departure Mono, Newsreader and Jost are
-under the SIL Open Font License.
+Jeyavardhan, all rights reserved. Inter Tight, IBM Plex Mono and Instrument
+Serif are under the SIL Open Font License.

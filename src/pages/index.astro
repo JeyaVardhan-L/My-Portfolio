@@ -1,9 +1,9 @@
 ---
 import Base from '../layouts/Base.astro';
-import ProjectList from '../components/ProjectList.astro';
+import Btn from '../components/Btn.astro';
+import Split from '../components/Split.astro';
+import Plates from '../components/Plates.astro';
 import WritingList from '../components/WritingList.astro';
-import PipelineDiagram from '../components/PipelineDiagram.astro';
-import GimbalDiagram from '../components/GimbalDiagram.astro';
 import { SITE } from '../site';
 import { getPosts, getProjects, onSide, url } from '../lib/site';
 
@@ -12,79 +12,71 @@ const swCount = projects.filter((p) => onSide(p, 'software')).length;
 const hwCount = projects.filter((p) => onSide(p, 'hardware')).length;
 const swFeatured = projects.filter((p) => p.data.featured && onSide(p, 'software')).slice(0, 4);
 const hwFeatured = projects.filter((p) => p.data.featured && onSide(p, 'hardware')).slice(0, 4);
-const posts = (await getPosts()).slice(0, 3);
-const contactLinks = [
-  { label: 'GitHub', href: SITE.github },
-  SITE.linkedin && { label: 'LinkedIn', href: SITE.linkedin },
-  SITE.resume && { label: 'Résumé', href: url(SITE.resume) },
-].filter(Boolean) as { label: string; href: string }[];
+const posts = (await getPosts()).slice(0, 4);
+const sides = ['software', 'hardware'] as const;
 ---
 
 <Base>
-  <section class="wrap hero">
-    <div class="hero-copy">
-      <p class="label rise">
-        <span class="sw-only">{SITE.intro.software.kicker}</span>
-        <span class="hw-only">{SITE.intro.hardware.kicker}</span>
+  <section class="hero">
+    <div class="wrap hero-top label rise">
+      <p>
+        <span class="sw-only">{SITE.intro.software.fields}</span>
+        <span class="hw-only">{SITE.intro.hardware.fields}</span>
       </p>
-      <h1 class="rise" style="--i: 1">
-        <span class="sw-only" set:html={SITE.intro.software.headline} />
-        <span class="hw-only" set:html={SITE.intro.hardware.headline} />
-      </h1>
-      <p class="lede rise sw-only" style="--i: 2">{SITE.intro.software.body}</p>
-      <p class="lede rise hw-only" style="--i: 2">{SITE.intro.hardware.body}</p>
-      <p class="now rise" style="--i: 3">
-        <span class="pulse" aria-hidden="true"></span>
-        <span class="label label--ink">Now</span>
-        <span class="now-text">{SITE.now}</span>
-      </p>
+      <p class="hero-where">{SITE.location}<br />{SITE.coords}</p>
     </div>
-    <figure class="hero-fig rise" style="--i: 2">
-      <div class="plate dotgrid">
-        <div class="sw-only"><PipelineDiagram /></div>
-        <div class="hw-only"><GimbalDiagram /></div>
+
+    <div class="wrap hero-mid">
+      {
+        sides.map((s) => (
+          <p class:list={['hero-statement rise', s === 'software' ? 'sw-only' : 'hw-only']} style="--i: 1">
+            {SITE.intro[s].statement}
+          </p>
+        ))
+      }
+      <div class="hero-cta rise" style="--i: 2">
+        <Btn label="See the work" href="#work" />
+        <Btn label="About me" href={url('/about/')} ghost />
       </div>
-      <figcaption class="label">
-        <span class="sw-only">Fig. 1 — A pipeline, the way ForgeShell runs it</span>
-        <span class="hw-only">Fig. 1 — The IMU behind my flight telemetry and the Air Mouse</span>
-      </figcaption>
-    </figure>
+    </div>
+
+    <h1 class="wordmark" aria-label={SITE.name}>
+      <span aria-hidden="true">{SITE.name}</span>
+    </h1>
+
+    <p class="side-label label" aria-hidden="true">
+      <span class="sw-only">{SITE.intro.software.label}</span>
+      <span class="hw-only">{SITE.intro.hardware.label}</span>
+    </p>
   </section>
 
   <section class="wrap section" id="work">
-    <div class="section-head">
-      <h2>Selected work</h2>
-      <a class="more" href={url('/projects/')}>
-        All <span class="sw-only">{swCount}</span><span class="hw-only">{hwCount}</span> projects <span>→</span>
-      </a>
+    <Split left="Selected" right="work" />
+    <div class="sw-only"><Plates items={swFeatured} /></div>
+    <div class="hw-only"><Plates items={hwFeatured} /></div>
+    <div class="more-row">
+      <p class="label">
+        <span class="sw-only">{swCount} projects on this side</span>
+        <span class="hw-only">{hwCount} projects on this side</span>
+      </p>
+      <Btn label="All projects" href={url('/projects/')} />
     </div>
-    <div class="sw-only"><ProjectList items={swFeatured} /></div>
-    <div class="hw-only"><ProjectList items={hwFeatured} /></div>
   </section>
 
-  {
-    posts.length > 0 && (
-      <section class="wrap section sw-only" id="writing">
-        <div class="section-head">
-          <h2>Writing</h2>
-          <a class="more" href={url('/writing/')}>
-            All writing <span>→</span>
-          </a>
-        </div>
-        <WritingList items={posts} />
-      </section>
-    )
-  }
+  <section class="band">
+    <div class="wrap band-in">
+      <p class="label band-label">Now</p>
+      <p class="band-text">{SITE.now}</p>
+      <p class="band-vert" aria-hidden="true">Currently</p>
+    </div>
+  </section>
 
   <section class="wrap section hw-only">
-    <div class="section-head">
-      <h2>On the bench</h2>
-      <span class="label">Parts that keep showing up</span>
-    </div>
+    <Split left="On the" right="bench" />
     <dl class="bench">
       {
         SITE.bench.map((b) => (
-          <div class="bench-row">
+          <div>
             <dt>{b.part}</dt>
             <dd class="label">{b.use}</dd>
           </div>
@@ -93,215 +85,200 @@ const contactLinks = [
     </dl>
   </section>
 
-  <section class="wrap section hw-only">
-    <div class="crossover">
-      <p>Most of what I build is software. The bigger half of this site is on the other side.</p>
-      <button class="crossover-btn" type="button" data-side-set="software">
-        Back to the software side <span aria-hidden="true">→</span>
-      </button>
-    </div>
-  </section>
-
-  <section class="wrap section contact" id="contact">
-    <p class="label">Contact</p>
-    <p class="contact-line">
-      {
-        SITE.email ? (
-          <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
-        ) : (
-          <a href={SITE.github} rel="me noopener">
-            Say hello on GitHub ↗
-          </a>
-        )
-      }
-    </p>
-    <p class="contact-note">I'm looking for internships, and for people who like building things properly.</p>
-    <ul class="contact-links label">
-      {
-        contactLinks.map((l) => (
-          <li>
-            <a href={l.href}>{l.label} ↗</a>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+  {
+    posts.length > 0 && (
+      <section class="inv room">
+        <div class="wrap">
+          <Split left="Recent" right="writing" />
+          <div class="room-list">
+            <WritingList items={posts} />
+          </div>
+          <div class="more-row">
+            <p class="label">Click one to read it right here</p>
+            <Btn label="All writing" href={url('/writing/')} />
+          </div>
+        </div>
+      </section>
+    )
+  }
 </Base>
 
 <style>
   .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    gap: clamp(2.5rem, 6vw, 5.5rem);
-    align-items: center;
-    padding-top: clamp(3.5rem, 9vw, 7rem);
-  }
-
-  .hero h1 {
-    margin-top: 1.4rem;
-    font-size: clamp(2.7rem, 1.6rem + 4.2vw, 4.9rem);
-    line-height: 1;
-    letter-spacing: -0.03em;
-  }
-
-  .hero .lede {
-    margin-top: 1.6rem;
-  }
-
-  .now {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.35rem 0.7rem;
-    margin-top: 2.25rem;
-    padding-top: 1.1rem;
-    border-top: 1px solid var(--rule);
-    max-width: 34rem;
-  }
-
-  .now-text {
-    font-style: italic;
-    color: var(--ink-2);
-  }
-
-  .pulse {
     position: relative;
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--accent);
-    align-self: center;
+    overflow: hidden;
+    min-height: calc(100svh - 64px);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    padding-top: 28px;
+  }
+
+  .hero-where {
+    text-align: right;
+  }
+
+  .hero-mid {
+    flex: 1;
+    padding-block: clamp(48px, 9vh, 112px) clamp(32px, 5vh, 56px);
+  }
+
+  .hero-statement {
+    max-width: 21em;
+    font-size: clamp(26px, 3.15vw, 46px);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+  }
+
+  .hero-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 36px;
+  }
+
+  .wordmark {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    font: 400 21.5vw/0.8 var(--serif);
+    letter-spacing: -0.035em;
+    white-space: nowrap;
+    translate: 0 0.1em;
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .pulse::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: var(--accent);
-      animation: ping 2.4s var(--ease-out) infinite;
+    .wordmark span {
+      animation: lift 1.6s var(--ease) both 0.15s;
     }
   }
 
-  @keyframes ping {
-    to {
-      transform: scale(3.2);
+  @keyframes lift {
+    from {
+      transform: translateY(40%);
       opacity: 0;
     }
   }
 
-  .hero-fig {
-    margin: 0;
+  .side-label {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    writing-mode: vertical-rl;
+    transform: translateY(-50%) rotate(180deg);
   }
 
-  .plate {
-    border: 1px solid var(--rule);
-    border-radius: 10px;
-    padding: clamp(0.5rem, 2vw, 1.5rem);
-  }
-
-  .hero-fig figcaption {
-    margin-top: 0.8rem;
-  }
-
-  .bench {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: clamp(2rem, 5vw, 4rem);
-    margin: 0;
-  }
-
-  .bench-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    padding: 1rem 0.25rem;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .bench-row dd {
-    margin: 0;
-    text-align: right;
-  }
-
-  .crossover {
+  .more-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 1.5rem 3rem;
-    padding: clamp(1.75rem, 4vw, 2.75rem);
-    border: 1px solid var(--rule);
-    border-radius: 10px;
+    gap: 16px;
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
   }
 
-  .crossover p {
-    max-width: 30rem;
-    font-size: 1.15em;
+  .band {
+    margin-top: var(--gap);
+    background: var(--indigo);
+    color: var(--bone);
   }
 
-  .crossover-btn {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 0.85rem 1.2rem;
-    border: 1px solid var(--ink);
-    border-radius: 999px;
-    transition: background 0.3s, color 0.3s;
+  .band-in {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 32px;
+    padding-block: clamp(80px, 12vw, 168px);
   }
 
-  .crossover-btn:hover {
-    background: var(--ink);
-    color: var(--paper);
+  .band-label {
+    color: var(--bone);
+    opacity: 0.7;
   }
 
-  .contact-line {
-    margin-top: 1.2rem;
-    font-size: clamp(2.1rem, 1rem + 5vw, 4.6rem);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    overflow-wrap: anywhere;
+  .band-text {
+    max-width: 15em;
+    font-size: clamp(34px, 4.8vw, 68px);
+    line-height: 1.02;
+    letter-spacing: -0.045em;
   }
 
-  .contact-line a {
-    text-decoration-thickness: 2px;
-    text-underline-offset: 0.12em;
+  .band-vert {
+    position: absolute;
+    right: var(--gutter);
+    bottom: clamp(80px, 12vw, 168px);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 18px;
+    opacity: 0.7;
   }
 
-  .contact-note {
-    margin-top: 1.5rem;
-    max-width: 32rem;
-    color: var(--muted);
+  .bench {
+    margin: 48px 0 0;
+    border-bottom: 1px solid var(--rule);
   }
 
-  .contact-links {
-    display: flex;
-    gap: 1.75rem;
-    list-style: none;
-    margin: 1.75rem 0 0;
-    padding: 0;
+  .bench div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: baseline;
+    padding: 20px 0;
+    border-top: 1px solid var(--rule);
   }
 
-  .contact-links a {
-    text-decoration: none;
+  .bench dt {
+    font-size: clamp(20px, 1.9vw, 26px);
+    letter-spacing: -0.025em;
   }
 
-  .contact-links a:hover {
-    color: var(--ink);
+  .bench dd {
+    margin: 0;
   }
 
-  @media (max-width: 900px) {
+  .room {
+    margin-top: var(--gap);
+    padding-block: var(--gap);
+  }
+
+  .room-list {
+    margin-top: 56px;
+  }
+
+  @media (max-width: 720px) {
     .hero {
+      min-height: auto;
+    }
+
+    .hero-top {
+      flex-direction: column;
+    }
+
+    .hero-where {
+      text-align: left;
+    }
+
+    .side-label {
+      display: none;
+    }
+
+    .band-in {
       grid-template-columns: 1fr;
     }
-  }
 
-  @media (max-width: 640px) {
-    .bench {
-      grid-template-columns: 1fr;
+    .band-vert {
+      display: none;
+    }
+
+    .more-row {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 </style>

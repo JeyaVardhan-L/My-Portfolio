@@ -2,7 +2,9 @@
 import { Image, getImage } from 'astro:assets';
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import { getProjects, monthYear, sideLabel, url, type Project } from '../../lib/site';
+import Btn from '../../components/Btn.astro';
+import Diagram from '../../components/Diagram.astro';
+import { diagramOf, getProjects, monthYear, sideLabel, url, type Project } from '../../lib/site';
 
 export async function getStaticPaths() {
   const all = await getProjects();
@@ -21,86 +23,96 @@ interface Props {
 const { entry, prev, next } = Astro.props;
 const { Content } = await render(entry);
 const d = entry.data;
+const hasDiagram = Boolean(diagramOf(entry.id));
+const portrait = d.cover ? d.cover.height > d.cover.width : false;
 const og = d.cover ? (await getImage({ src: d.cover, width: 1200, format: 'jpg' })).src : undefined;
 ---
 
 <Base title={d.title} description={d.summary} image={og} article>
-  <article class="wrap proj">
-    <a class="more back" href={url('/projects/')}><span>←</span> All work</a>
-    <header class="proj-head">
-      <p class="label">
-        {sideLabel[d.side]} · {monthYear(d.date)}{d.status !== 'shipped' && ` · ${d.status}`}
-      </p>
-      <h1>{d.title}</h1>
-      <p class="lede">{d.summary}</p>
-      {
-        (d.repo || d.demo) && (
-          <p class="proj-links">
-            {d.demo && (
-              <a class="pill pill--solid" href={d.demo}>
-                Try it live ↗
-              </a>
-            )}
-            {d.repo && (
-              <a class="pill" href={d.repo}>
-                Source on GitHub ↗
-              </a>
-            )}
-          </p>
-        )
-      }
+  <article>
+    <header class="wrap ph">
+      <div class="ph-top label rise">
+        <a href={url('/projects/')}>← All work</a>
+        <span>{sideLabel[d.side]} · {monthYear(d.date)}{d.status !== 'shipped' && ` · ${d.status}`}</span>
+      </div>
+      <h1 class="display ph-title rise" style="--i: 1">{d.title}</h1>
+      <div class="ph-row rise" style="--i: 2">
+        <p class="lede">{d.summary}</p>
+        <div class="ph-btns">
+          {d.demo && <Btn label="Live site" href={d.demo} />}
+          {d.repo && <Btn label="Source" href={d.repo} ghost />}
+        </div>
+      </div>
     </header>
 
-    {
-      d.cover && (
-        <figure class="proj-cover">
-          <div class="cover-bar" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-            <span>{d.title}</span>
-          </div>
-          <Image src={d.cover} alt={`Screenshot of ${d.title}`} widths={[640, 960, 1400]} sizes="(min-width: 1180px) 1120px, 100vw" />
-        </figure>
-      )
-    }
+    <figure class:list={['wrap ph-cover rise', { portrait }]} style="--i: 3">
+      <div class:list={['ph-media', { drawn: !d.cover }]}>
+        {
+          d.cover ? (
+            <Image src={d.cover} alt={`${d.title}, screenshot`} widths={[720, 1200, 1800]} sizes="(min-width: 1340px) 1240px, 100vw" loading="eager" />
+          ) : (
+            <Diagram id={entry.id} />
+          )
+        }
+      </div>
+      <figcaption class="label">{d.cover ? (d.demo ? 'From the live site' : 'Screenshot') : 'Fig. 1 — How it works'}</figcaption>
+    </figure>
 
-    <div class="proj-grid">
+    <div class="wrap ph-grid">
       <aside class="specs">
         {
           d.specs.length > 0 && (
-            <section>
-              <p class="label label--ink">Specifications</p>
-              <dl>
-                {d.specs.map((s) => (
-                  <div>
-                    <dt class="label">{s.label}</dt>
-                    <dd>{s.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            </section>
+            <dl>
+              {d.specs.map((s) => (
+                <div>
+                  <dt class="label">{s.label}</dt>
+                  <dd>{s.value}</dd>
+                </div>
+              ))}
+            </dl>
           )
         }
         {
           d.tags.length > 0 && (
-            <section>
-              <p class="label label--ink">Stack</p>
-              <ul class="tags">
-                {d.tags.map((t) => (
-                  <li class="tag">{t}</li>
-                ))}
-              </ul>
-            </section>
+            <ul class="tags">
+              {d.tags.map((t) => (
+                <li class="tag">{t}</li>
+              ))}
+            </ul>
           )
         }
       </aside>
-      <div class="prose">
-        <Content />
+
+      <div class="ph-body">
+        {
+          d.cover && hasDiagram && (
+            <figure class="ph-fig">
+              <div class="ph-fig-plate">
+                <Diagram id={entry.id} />
+              </div>
+              <figcaption class="label">Fig. 1 — How it works</figcaption>
+            </figure>
+          )
+        }
+        <div class="prose">
+          <Content />
+        </div>
+        {
+          d.gallery.length > 0 && (
+            <div class="gallery">
+              {d.gallery.map((g) => (
+                <figure>
+                  <Image src={g.src} alt={g.caption} widths={[480, 900]} sizes="(min-width: 900px) 44rem, 100vw" />
+                  {g.caption && <figcaption class="label">{g.caption}</figcaption>}
+                </figure>
+              ))}
+            </div>
+          )
+        }
       </div>
     </div>
 
-    <nav class="pager" aria-label="More projects">
+    <nav class="wrap pager" aria-label="More projects">
       {
         prev ? (
           <a href={url(`/projects/${prev.id}/`)}>
@@ -124,156 +136,165 @@ const og = d.cover ? (await getImage({ src: d.cover, width: 1200, format: 'jpg' 
 </Base>
 
 <style>
-  .back {
-    display: inline-block;
-    margin-top: clamp(2.5rem, 6vw, 4rem);
+  .ph {
+    padding-top: 28px;
   }
 
-  .back:hover span {
-    transform: translateX(-3px);
-  }
-
-  .proj-head {
-    padding-top: 2rem;
-    max-width: 52rem;
-  }
-
-  .proj-head h1 {
-    margin-top: 1rem;
-    font-size: clamp(2.6rem, 1.6rem + 4vw, 4.6rem);
-    line-height: 1;
-    letter-spacing: -0.03em;
-  }
-
-  .proj-head .lede {
-    margin-top: 1.3rem;
-  }
-
-  .proj-links {
+  .ph-top {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 2rem;
+    justify-content: space-between;
+    gap: 16px;
   }
 
-  .pill {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+  .ph-top a {
     text-decoration: none;
-    padding: 0.7rem 1.05rem;
-    border: 1px solid var(--ink);
-    border-radius: 999px;
-    transition: background 0.3s, color 0.3s;
   }
 
-  .pill:hover,
-  .pill--solid {
-    background: var(--ink);
-    color: var(--paper);
-  }
-
-  .pill--solid:hover {
-    background: transparent;
+  .ph-top a:hover {
     color: var(--ink);
   }
 
-  .proj-cover {
-    margin: clamp(2.5rem, 6vw, 4rem) 0 0;
-    border: 1px solid var(--rule);
-    border-radius: 12px;
-    overflow: hidden;
-    background: var(--paper-2);
-    box-shadow: var(--shadow);
+  .ph-title {
+    margin-top: clamp(40px, 7vw, 88px);
   }
 
-  .cover-bar {
+  .ph-row {
     display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0.65rem 0.9rem;
-    border-bottom: 1px solid var(--rule);
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 24px 48px;
+    margin-top: 32px;
   }
 
-  .cover-bar i {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--rule);
+  .ph-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
-  .cover-bar span {
-    margin-left: 0.6rem;
-    font-family: var(--mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--muted);
+  .ph-cover {
+    margin-top: clamp(48px, 7vw, 88px);
+    margin-bottom: 0;
   }
 
-  .proj-cover img {
+  .ph-media {
+    background: var(--plate);
+    overflow: hidden;
+  }
+
+  .ph-media :global(img) {
     width: 100%;
     height: auto;
-    max-height: 72vh;
-    object-fit: contain;
   }
 
-  .proj-grid {
+  .ph-cover.portrait .ph-media :global(img) {
+    width: auto;
+    max-height: 78vh;
+    margin-inline: auto;
+    padding-block: 32px;
+  }
+
+  .ph-media.drawn {
+    aspect-ratio: 16 / 10;
+    padding: 4% 8%;
+  }
+
+  .ph-cover figcaption {
+    margin-top: 12px;
+  }
+
+  .ph-grid {
     display: grid;
-    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
-    gap: clamp(2rem, 6vw, 5.5rem);
-    margin-top: clamp(3rem, 7vw, 5rem);
+    grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+    gap: clamp(32px, 6vw, 96px);
+    margin-top: clamp(64px, 9vw, 120px);
   }
 
   .specs {
-    align-self: start;
     position: sticky;
-    top: 2rem;
+    top: 24px;
+    align-self: start;
     display: grid;
-    gap: 2.25rem;
+    gap: 32px;
   }
 
   .specs dl {
-    margin: 0.8rem 0 0;
+    margin: 0;
+    border-bottom: 1px solid var(--rule);
   }
 
   .specs dl div {
-    padding: 0.7rem 0;
+    padding: 14px 0;
     border-top: 1px solid var(--rule);
   }
 
   .specs dd {
-    margin: 0.2rem 0 0;
-    font-size: 0.95rem;
+    margin: 6px 0 0;
+    font-size: 15px;
     line-height: 1.4;
   }
 
   .tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
+    gap: 6px;
     list-style: none;
-    margin: 0.8rem 0 0;
+    margin: 0;
     padding: 0;
   }
 
-  .prose > :global(:first-child) {
-    margin-top: 0;
+  .ph-fig {
+    margin: 0 0 56px;
+    max-width: 44rem;
+  }
+
+  .ph-fig-plate {
+    aspect-ratio: 600 / 440;
+    padding: 4%;
+    background: var(--plate);
+  }
+
+  .ph-fig figcaption {
+    margin-top: 12px;
+  }
+
+  .gallery {
+    display: grid;
+    gap: 40px;
+    max-width: 44rem;
+    margin-top: 56px;
+  }
+
+  .gallery figure {
+    margin: 0;
+  }
+
+  .gallery :global(img) {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+    background: var(--plate);
+  }
+
+  .gallery figcaption {
+    margin-top: 10px;
+    text-transform: none;
   }
 
   .pager {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    margin-top: clamp(4rem, 9vw, 7rem);
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--rule);
+    gap: 16px;
+    margin-top: var(--gap);
   }
 
   .pager a {
     display: grid;
-    gap: 0.4rem;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
     text-decoration: none;
   }
 
@@ -282,18 +303,17 @@ const og = d.cover ? (await getImage({ src: d.cover, width: 1200, format: 'jpg' 
   }
 
   .pager-title {
-    font-size: 1.3rem;
-    letter-spacing: -0.01em;
+    font-size: clamp(22px, 2.4vw, 34px);
+    letter-spacing: -0.035em;
+    transition: color 0.3s;
   }
 
   .pager a:hover .pager-title {
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-    text-decoration-thickness: 1px;
+    color: var(--accent);
   }
 
   @media (max-width: 860px) {
-    .proj-grid {
+    .ph-grid {
       grid-template-columns: 1fr;
     }
 

@@ -1,14 +1,13 @@
 ---
+import Btn from './Btn.astro';
 import { SITE } from '../site';
 import { url } from '../lib/site';
 
-const out = [
-  SITE.email && { label: 'Email', href: `mailto:${SITE.email}` },
-  { label: 'GitHub', href: SITE.github },
-  SITE.linkedin && { label: 'LinkedIn', href: SITE.linkedin },
-  SITE.resume && { label: 'Résumé', href: url(SITE.resume) },
-  { label: 'RSS', href: url('/rss.xml') },
-].filter(Boolean) as { label: string; href: string }[];
+const actions = [
+  SITE.email ? { label: SITE.email, href: `mailto:${SITE.email}` } : { label: 'Write to me on GitHub', href: SITE.github },
+  SITE.linkedin && { label: 'LinkedIn', href: SITE.linkedin, ghost: true },
+  SITE.resume && { label: 'Résumé', href: url(SITE.resume), ghost: true },
+].filter(Boolean) as { label: string; href: string; ghost?: boolean }[];
 
 const pages = [
   { label: 'Work', href: url('/projects/') },
@@ -16,23 +15,29 @@ const pages = [
   { label: 'About', href: url('/about/') },
   { label: 'Inspiration', href: url('/inspiration/') },
 ];
+const elsewhere = [
+  { label: 'GitHub', href: SITE.github },
+  SITE.linkedin && { label: 'LinkedIn', href: SITE.linkedin },
+  { label: 'RSS', href: url('/rss.xml') },
+].filter(Boolean) as { label: string; href: string }[];
 ---
 
-<footer class="site-footer">
+<footer class="ft">
   <div class="wrap">
-    <div class="foot">
-      <div class="sig">
-        <p class="sig-name">{SITE.name} <span lang="te">{SITE.nameTe}</span></p>
-        <p class="label">
-          {SITE.location} · <span data-clock>--:--</span> IST
-        </p>
+    <p class="label">Contact</p>
+    <p class="ft-line">Have something that needs building? I'd like to hear about it.</p>
+    <div class="ft-actions">
+      {actions.map((a) => <Btn label={a.label} href={a.href} ghost={a.ghost} />)}
+    </div>
+    <div class="ft-meta label">
+      <div>
+        <p class="ft-name">{SITE.name} <span lang="te">{SITE.nameTe}</span></p>
+        <p>{SITE.location} · <span data-clock>--:--</span> IST</p>
       </div>
-      <ul class="foot-list label">
-        {pages.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
-      </ul>
-      <ul class="foot-list label">
+      <ul>{pages.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+      <ul>
         {
-          out.map((l) => (
+          elsewhere.map((l) => (
             <li>
               <a href={l.href} rel={l.href.startsWith('http') ? 'me noopener' : undefined}>
                 {l.label}
@@ -41,76 +46,95 @@ const pages = [
           ))
         }
       </ul>
+      <p class="ft-fine">© {new Date().getFullYear()} {SITE.fullName}<br /><span class="no-touch">⌘K / Ctrl K to jump anywhere</span></p>
     </div>
-    <p class="colophon label">
-      © {new Date().getFullYear()} {SITE.fullName}. Set in Newsreader, Jost and Departure Mono.
-      <span class="fine">Press ⌘K or Ctrl K to jump anywhere.</span>
-    </p>
   </div>
 </footer>
 
 <style>
-  .site-footer {
-    margin-top: clamp(6rem, 14vw, 10rem);
-    padding-bottom: 2.5rem;
+  .ft {
+    padding-top: 40px;
+    border-top: 1px solid var(--rule);
+    margin-top: var(--gap);
   }
 
-  .foot {
+  :global(main:has(> .room:last-child)) + .ft {
+    margin-top: 0;
+  }
+
+  .ft-line {
+    margin-top: 18px;
+    max-width: 16em;
+    font-size: clamp(36px, 5.6vw, 84px);
+    line-height: 0.96;
+    letter-spacing: -0.05em;
+  }
+
+  .ft-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 36px;
+  }
+
+  .ft-meta {
     display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 2rem clamp(2.5rem, 7vw, 6rem);
-    padding-top: 2rem;
+    grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+    gap: 24px;
+    margin-top: clamp(64px, 9vw, 120px);
+    padding-block: 24px 32px;
     border-top: 1px solid var(--rule);
   }
 
-  .sig-name {
-    font-family: var(--sans);
-    letter-spacing: 0.12em;
-    margin-bottom: 0.4rem;
-  }
-
-  .sig-name span {
-    color: var(--muted);
-    letter-spacing: 0;
-    margin-left: 0.35rem;
-  }
-
-  .foot-list {
+  .ft-meta ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 0.55rem;
-    letter-spacing: 0.14em;
+    gap: 8px;
+    align-content: start;
   }
 
-  .foot-list a {
+  .ft-meta a {
     text-decoration: none;
   }
 
-  .foot-list a:hover {
+  .ft-meta a:hover {
     color: var(--ink);
   }
 
-  .colophon {
-    margin-top: 3rem;
-    text-transform: none;
-    letter-spacing: 0.02em;
+  .ft-name {
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .ft-name span {
+    color: var(--muted);
+    margin-left: 6px;
+  }
+
+  .ft-fine {
+    text-align: right;
   }
 
   @media (hover: none), (pointer: coarse) {
-    .fine {
+    .no-touch {
       display: none;
     }
   }
 
-  @media (max-width: 640px) {
-    .foot {
+  @media (max-width: 720px) {
+    .ft-meta {
       grid-template-columns: 1fr 1fr;
     }
 
-    .sig {
+    .ft-meta > div {
       grid-column: 1 / -1;
+    }
+
+    .ft-fine {
+      grid-column: 1 / -1;
+      text-align: left;
     }
   }
 </style>
