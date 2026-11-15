@@ -1,0 +1,146 @@
+---
+import { getImage } from 'astro:assets';
+import { onSide, pad, sideClass, sideShort, url, year, type Project } from '../lib/site';
+
+interface Props {
+  items: Project[];
+  /** number of the first row (home page lists continue numbering after "see more") */
+  start?: number;
+  /** hide each row on the side it does not belong to, numbering each side separately */
+  filter?: boolean;
+}
+
+const { items, start = 1, filter = false } = Astro.props;
+
+let swN = 0;
+let hwN = 0;
+const rows = await Promise.all(
+  items.map(async (p, i) => {
+    const sw = onSide(p, 'software') ? ++swN : 0;
+    const hw = onSide(p, 'hardware') ? ++hwN : 0;
+    const img = p.data.cover ? (await getImage({ src: p.data.cover, width: 720, format: 'webp' })).src : undefined;
+    return { p, n: start + i, sw, hw, img };
+  }),
+);
+---
+
+<ol class="rows">
+  {
+    rows.map(({ p, n, sw, hw, img }) => (
+      <li class:list={['row', filter && sideClass(p.data.side)]}>
+        <a href={url(`/projects/${p.id}/`)} data-peek-title={p.data.title} data-peek-img={img}>
+          <span class="label row-n">
+            {filter ? (
+              <>
+                {sw > 0 && <span class="sw-only">{pad(sw)}</span>}
+                {hw > 0 && <span class="hw-only">{pad(hw)}</span>}
+              </>
+            ) : (
+              pad(n)
+            )}
+          </span>
+          <span class="row-main">
+            <span class="row-title">
+              {p.data.title}
+              {p.data.status === 'in progress' && <span class="label row-flag">In progress</span>}
+            </span>
+            <span class="row-sum">{p.data.summary}</span>
+          </span>
+          <span class="label row-meta">
+            {sideShort[p.data.side]} · {year(p.data.date)}
+          </span>
+          <span class="row-go" aria-hidden="true">
+            →
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .row a {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) 150px 24px;
+    gap: 16px;
+    align-items: baseline;
+    padding: 28px 12px;
+    margin-inline: -12px;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    transition: background 0.4s var(--ease);
+  }
+
+  .row a:hover,
+  .row a:focus-visible {
+    background: var(--bg-2);
+  }
+
+  .row-title {
+    display: block;
+    font-size: clamp(22px, 2.2vw, 30px);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    transition: color 0.3s;
+  }
+
+  .row a:hover .row-title {
+    color: var(--blue);
+  }
+
+  .row-flag {
+    margin-left: 10px;
+    vertical-align: middle;
+    color: var(--blue);
+  }
+
+  .row-sum {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 8px;
+    max-width: 44em;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .row-meta {
+    text-align: right;
+  }
+
+  .row-go {
+    justify-self: end;
+    color: var(--muted);
+    transition: transform 0.5s var(--ease), color 0.3s;
+  }
+
+  .row a:hover .row-go {
+    color: var(--blue);
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 720px) {
+    .row a {
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 8px 10px;
+      padding-block: 22px;
+    }
+
+    .row-meta {
+      grid-column: 2;
+      text-align: left;
+    }
+
+    .row-go {
+      display: none;
+    }
+  }
+</style>

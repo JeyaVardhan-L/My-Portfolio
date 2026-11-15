@@ -19,7 +19,8 @@ rules it follows are in [`AGENTS.md`](AGENTS.md).
 > Change the "Now" line on my home page to: …
 
 Each project is a folder in `src/content/projects/` holding its text, its
-screenshot and, if it has one, its animated diagram.
+cover image (a placeholder until you add yours) and, if it has one, its
+animated diagram.
 
 For inspiration photos, no agent needed: drop images into
 `src/assets/inspiration/`, commit and push.
@@ -45,4 +46,6 @@ npm run check    # what CI runs before deploying
 
 Code: MIT (see `LICENSE`). Writing, photos and project images: © Lekkala
 Jeyavardhan, all rights reserved. Inter Tight, IBM Plex Mono and Instrument
-Serif are under the SIL Open Font License.
+Serif are under the SIL Open Font License. The engravings in `src/assets/art/`
+are public domain (Wikimedia Commons: *The Indian Empire*, c. 1860, and
+*Picturesque America*, 1872).

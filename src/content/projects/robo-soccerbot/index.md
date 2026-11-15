@@ -3,10 +3,11 @@ title: "Robo soccer bot"
 summary: "A four-wheel-drive competition robot driven by an Arduino, two 43 A motor drivers and a 2.4 GHz radio."
 date: 2026-02-27
 side: hardware
-featured: true
-order: 7
+featured: false
+order: 6
 tags: ["Arduino","C++","Motor drivers","RF"]
 repo: "https://github.com/JeyaVardhan-L/Robo_Soccerbot"
+cover: ./cover.png
 specs:
   - { label: "MCU", value: "ATmega328P (Arduino Uno)" }
   - { label: "Drivers", value: "2 × BTS7960, 43 A" }

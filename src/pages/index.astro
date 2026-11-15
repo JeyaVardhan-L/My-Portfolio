@@ -1,24 +1,28 @@
 ---
 import Base from '../layouts/Base.astro';
-import Btn from '../components/Btn.astro';
-import Split from '../components/Split.astro';
-import Plates from '../components/Plates.astro';
+import Art from '../components/Art.astro';
+import ProjectRows from '../components/ProjectRows.astro';
 import WritingList from '../components/WritingList.astro';
+import heroArt from '../assets/art/hero.jpg';
 import { SITE } from '../site';
 import { getPosts, getProjects, onSide, url } from '../lib/site';
 
 const projects = await getProjects();
-const swCount = projects.filter((p) => onSide(p, 'software')).length;
-const hwCount = projects.filter((p) => onSide(p, 'hardware')).length;
-const swFeatured = projects.filter((p) => p.data.featured && onSide(p, 'software')).slice(0, 4);
-const hwFeatured = projects.filter((p) => p.data.featured && onSide(p, 'hardware')).slice(0, 4);
-const posts = (await getPosts()).slice(0, 4);
 const sides = ['software', 'hardware'] as const;
+const lists = Object.fromEntries(
+  sides.map((s) => {
+    const all = projects.filter((p) => onSide(p, s));
+    const top = all.filter((p) => p.data.featured).slice(0, 2);
+    const rest = all.filter((p) => !top.includes(p));
+    return [s, { all, top, rest }];
+  }),
+) as Record<(typeof sides)[number], { all: typeof projects; top: typeof projects; rest: typeof projects }>;
+const posts = (await getPosts()).slice(0, 4);
 ---
 
 <Base>
   <section class="hero">
-    <div class="wrap hero-top label rise">
+    <div class="wrap hero-hud label rise">
       <p>
         <span class="sw-only">{SITE.intro.software.fields}</span>
         <span class="hw-only">{SITE.intro.hardware.fields}</span>
@@ -26,53 +30,57 @@ const sides = ['software', 'hardware'] as const;
       <p class="hero-where">{SITE.location}<br />{SITE.coords}</p>
     </div>
 
-    <div class="wrap hero-mid">
-      {
-        sides.map((s) => (
-          <p class:list={['hero-statement rise', s === 'software' ? 'sw-only' : 'hw-only']} style="--i: 1">
-            {SITE.intro[s].statement}
-          </p>
-        ))
-      }
-      <div class="hero-cta rise" style="--i: 2">
-        <Btn label="See the work" href="#work" />
-        <Btn label="About me" href={url('/about/')} ghost />
-      </div>
-    </div>
-
-    <h1 class="wordmark" aria-label={SITE.name}>
-      <span aria-hidden="true">{SITE.name}</span>
-    </h1>
-
-    <p class="side-label label" aria-hidden="true">
+    <h1 class="name rise" style="--i: 1">{SITE.name}</h1>
+    <p class="label hero-side rise" style="--i: 2">
       <span class="sw-only">{SITE.intro.software.label}</span>
       <span class="hw-only">{SITE.intro.hardware.label}</span>
     </p>
+
+    <Art src={heroArt} variant="hero" eager />
+
+    <div class="wrap hero-foot label">
+      <p>{SITE.art.hero}</p>
+      {SITE.now && <p class="hero-now"><i aria-hidden="true"></i>Now · {SITE.now}</p>}
+      <a href="#work">Scroll ↓</a>
+    </div>
   </section>
 
   <section class="wrap section" id="work">
-    <Split left="Selected" right="work" />
-    <div class="sw-only"><Plates items={swFeatured} /></div>
-    <div class="hw-only"><Plates items={hwFeatured} /></div>
-    <div class="more-row">
-      <p class="label">
-        <span class="sw-only">{swCount} projects on this side</span>
-        <span class="hw-only">{hwCount} projects on this side</span>
-      </p>
-      <Btn label="All projects" href={url('/projects/')} />
+    <div class="sec-head">
+      <h2 class="h-serif">Selected work</h2>
+      <a class="label" href={url('/projects/')}>Full index →</a>
     </div>
-  </section>
-
-  <section class="band">
-    <div class="wrap band-in">
-      <p class="label band-label">Now</p>
-      <p class="band-text">{SITE.now}</p>
-      <p class="band-vert" aria-hidden="true">Currently</p>
-    </div>
+    {
+      sides.map((s) => (
+        <div class={s === 'software' ? 'sw-only' : 'hw-only'}>
+          <ProjectRows items={lists[s].top} />
+          {lists[s].rest.length > 0 && (
+            <>
+              <div class="more-wrap" id={`more-${s}`}>
+                <div>
+                  <ProjectRows items={lists[s].rest} start={lists[s].top.length + 1} />
+                </div>
+              </div>
+              <div class="more-row">
+                <button class="more-btn" type="button" data-more={`more-${s}`} aria-expanded="false" aria-controls={`more-${s}`}>
+                  <span class="t-open">See {lists[s].rest.length} more</span>
+                  <span class="t-close">Show less</span>
+                  <i aria-hidden="true">+</i>
+                </button>
+                <p class="label">{lists[s].all.length} projects on this side</p>
+              </div>
+            </>
+          )}
+        </div>
+      ))
+    }
   </section>
 
   <section class="wrap section hw-only">
-    <Split left="On the" right="bench" />
+    <div class="sec-head">
+      <h2 class="h-serif">On the bench</h2>
+      <p class="label">Parts that keep showing up</p>
+    </div>
     <dl class="bench">
       {
         SITE.bench.map((b) => (
@@ -87,16 +95,15 @@ const sides = ['software', 'hardware'] as const;
 
   {
     posts.length > 0 && (
-      <section class="inv room">
+      <section class="room writing">
         <div class="wrap">
-          <Split left="Recent" right="writing" />
-          <div class="room-list">
-            <WritingList items={posts} />
+          <div class="sec-head">
+            <h2 class="h-serif">Recent writing</h2>
+            <a class="label" href={url('/writing/')}>
+              All writing →
+            </a>
           </div>
-          <div class="more-row">
-            <p class="label">Click one to read it right here</p>
-            <Btn label="All writing" href={url('/writing/')} />
-          </div>
+          <WritingList items={posts} />
         </div>
       </section>
     )
@@ -106,71 +113,84 @@ const sides = ['software', 'hardware'] as const;
 <style>
   .hero {
     position: relative;
-    overflow: hidden;
-    min-height: calc(100svh - 64px);
     display: flex;
     flex-direction: column;
+    min-height: calc(100svh - 58px);
+    overflow: hidden;
   }
 
-  .hero-top {
+  .hero-hud {
+    position: relative;
+    z-index: 2;
     display: flex;
     justify-content: space-between;
     gap: 24px;
-    padding-top: 28px;
+    padding-top: 24px;
   }
 
   .hero-where {
     text-align: right;
   }
 
-  .hero-mid {
-    flex: 1;
-    padding-block: clamp(48px, 9vh, 112px) clamp(32px, 5vh, 56px);
-  }
-
-  .hero-statement {
-    max-width: 21em;
-    font-size: clamp(26px, 3.15vw, 46px);
-    line-height: 1.1;
-    letter-spacing: -0.035em;
-  }
-
-  .hero-cta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 36px;
-  }
-
-  .wordmark {
-    display: flex;
-    justify-content: center;
-    margin: 0;
-    font: 400 21.5vw/0.8 var(--serif);
-    letter-spacing: -0.035em;
+  .name {
+    position: relative;
+    z-index: 2;
+    margin-top: clamp(28px, 7vh, 88px);
+    text-align: center;
     white-space: nowrap;
-    translate: 0 0.1em;
+    font: 400 clamp(60px, 18.5vw, 360px) / 0.9 var(--serif);
+    letter-spacing: -0.015em;
+    color: var(--blue);
   }
 
-  @media (prefers-reduced-motion: no-preference) {
-    .wordmark span {
-      animation: lift 1.6s var(--ease) both 0.15s;
-    }
+  .hero-side {
+    position: relative;
+    z-index: 2;
+    margin-top: 18px;
+    text-align: center;
   }
 
-  @keyframes lift {
-    from {
-      transform: translateY(40%);
-      opacity: 0;
-    }
+  .hero :global(.art--hero) {
+    flex: 1;
+    min-height: 280px;
+    margin-top: calc(-0.06 * 100vw);
   }
 
-  .side-label {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    writing-mode: vertical-rl;
-    transform: translateY(-50%) rotate(180deg);
+  .hero :global(.art--hero .art-in) {
+    height: 100%;
+    min-height: clamp(280px, 52vh, 680px);
+  }
+
+  .hero-foot {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding-block: 16px 18px;
+  }
+
+  .hero-foot a {
+    text-decoration: none;
+  }
+
+  .hero-foot a:hover {
+    color: var(--ink);
+  }
+
+  .hero-now {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink-2);
+  }
+
+  .hero-now i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
   }
 
   .more-row {
@@ -178,50 +198,11 @@ const sides = ['software', 'hardware'] as const;
     justify-content: space-between;
     align-items: center;
     gap: 16px;
-    margin-top: 64px;
-    padding-top: 20px;
-    border-top: 1px solid var(--rule);
-  }
-
-  .band {
-    margin-top: var(--gap);
-    background: var(--indigo);
-    color: var(--bone);
-  }
-
-  .band-in {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    gap: 32px;
-    padding-block: clamp(80px, 12vw, 168px);
-  }
-
-  .band-label {
-    color: var(--bone);
-    opacity: 0.7;
-  }
-
-  .band-text {
-    max-width: 15em;
-    font-size: clamp(34px, 4.8vw, 68px);
-    line-height: 1.02;
-    letter-spacing: -0.045em;
-  }
-
-  .band-vert {
-    position: absolute;
-    right: var(--gutter);
-    bottom: clamp(80px, 12vw, 168px);
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    font-size: 18px;
-    opacity: 0.7;
+    padding-top: 24px;
   }
 
   .bench {
-    margin: 48px 0 0;
-    border-bottom: 1px solid var(--rule);
+    margin: 0;
   }
 
   .bench div {
@@ -229,26 +210,26 @@ const sides = ['software', 'hardware'] as const;
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 16px;
     align-items: baseline;
-    padding: 20px 0;
-    border-top: 1px solid var(--rule);
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule);
   }
 
   .bench dt {
-    font-size: clamp(20px, 1.9vw, 26px);
-    letter-spacing: -0.025em;
+    font-size: clamp(19px, 1.7vw, 23px);
+    letter-spacing: -0.02em;
   }
 
   .bench dd {
     margin: 0;
   }
 
-  .room {
+  .writing {
     margin-top: var(--gap);
-    padding-block: var(--gap);
+    padding-block: clamp(80px, 10vw, 136px);
   }
 
-  .room-list {
-    margin-top: 56px;
+  .writing :global(.wl) {
+    border-bottom: 0;
   }
 
   @media (max-width: 720px) {
@@ -256,24 +237,34 @@ const sides = ['software', 'hardware'] as const;
       min-height: auto;
     }
 
-    .hero-top {
+    .hero :global(.art--hero) {
+      flex: none;
+      min-height: 0;
+      margin-top: -4vw;
+    }
+
+    .hero :global(.art--hero .art-in) {
+      min-height: 0;
+      height: 62vw;
+    }
+
+    .hero :global(.art--hero img) {
+      object-position: 50% 40%;
+    }
+
+    .hero-hud {
       flex-direction: column;
+      gap: 8px;
     }
 
     .hero-where {
       text-align: left;
     }
 
-    .side-label {
-      display: none;
-    }
-
-    .band-in {
-      grid-template-columns: 1fr;
-    }
-
-    .band-vert {
-      display: none;
+    .hero-foot {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
     }
 
     .more-row {

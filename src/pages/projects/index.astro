@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import ProjectList from '../../components/ProjectList.astro';
+import ProjectRows from '../../components/ProjectRows.astro';
 import { getProjects, onSide } from '../../lib/site';
 import { SITE } from '../../site';
 
@@ -9,7 +9,7 @@ const swCount = projects.filter((p) => onSide(p, 'software')).length;
 const hwCount = projects.filter((p) => onSide(p, 'hardware')).length;
 ---
 
-<Base title="Work" description={`Projects by ${SITE.name}: systems software, robotics, vision, XR and hardware.`}>
+<Base title="Work" description={`Projects by ${SITE.name}.`}>
   <header class="wrap head">
     <p class="label rise">
       Index · <span class="sw-only">Software side · {swCount} projects</span><span class="hw-only">Hardware side · {hwCount} projects</span>
@@ -18,31 +18,28 @@ const hwCount = projects.filter((p) => onSide(p, 'hardware')).length;
     <p class="lede rise" style="--i: 2">
       <span class="sw-only">Software, and the projects where software and hardware meet.</span>
       <span class="hw-only">Things with wires, motors and solder, and the code that runs them.</span>
-      {" "}Use the switch at the top to see the other side.
+      {' '}Hover a project to preview it; use the switch at the top for the other side.
     </p>
   </header>
   <section class="wrap">
-    <ProjectList items={projects} filterBySide />
-    <p class="label after">
-      Smaller experiments and coursework live on <a href={SITE.github}>GitHub</a>.
-    </p>
+    <div class="rows-top"><ProjectRows items={projects} filter /></div>
   </section>
 </Base>
 
 <style>
   .head {
-    padding-block: clamp(48px, 9vw, 112px) 56px;
+    padding-block: clamp(48px, 9vw, 112px) 48px;
   }
 
   .head .display {
-    margin-top: 24px;
+    margin-top: 20px;
   }
 
   .head .lede {
-    margin-top: 28px;
+    margin-top: 24px;
   }
 
-  .after {
-    margin-top: 24px;
+  .rows-top {
+    border-top: 1px solid var(--rule);
   }
 </style>

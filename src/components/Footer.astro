@@ -1,11 +1,12 @@
 ---
+import Art from './Art.astro';
 import Btn from './Btn.astro';
+import footerArt from '../assets/art/footer.jpg';
 import { SITE } from '../site';
 import { url } from '../lib/site';
 
 const actions = [
   SITE.email ? { label: SITE.email, href: `mailto:${SITE.email}` } : { label: 'Write to me on GitHub', href: SITE.github },
-  SITE.linkedin && { label: 'LinkedIn', href: SITE.linkedin, ghost: true },
   SITE.resume && { label: 'Résumé', href: url(SITE.resume), ghost: true },
 ].filter(Boolean) as { label: string; href: string; ghost?: boolean }[];
 
@@ -16,6 +17,7 @@ const pages = [
   { label: 'Inspiration', href: url('/inspiration/') },
 ];
 const elsewhere = [
+  SITE.email && { label: 'Email', href: `mailto:${SITE.email}` },
   { label: 'GitHub', href: SITE.github },
   SITE.linkedin && { label: 'LinkedIn', href: SITE.linkedin },
   { label: 'RSS', href: url('/rss.xml') },
@@ -23,18 +25,20 @@ const elsewhere = [
 ---
 
 <footer class="ft">
-  <div class="wrap">
-    <p class="label">Contact</p>
-    <p class="ft-line">Have something that needs building? I'd like to hear about it.</p>
-    <div class="ft-actions">
-      {actions.map((a) => <Btn label={a.label} href={a.href} ghost={a.ghost} />)}
-    </div>
-    <div class="ft-meta label">
-      <div>
-        <p class="ft-name">{SITE.name} <span lang="te">{SITE.nameTe}</span></p>
-        <p>{SITE.location} · <span data-clock>--:--</span> IST</p>
+  <div class="wrap ft-grid">
+    <div class="ft-brand">
+      <p class="ft-name"><i aria-hidden="true"></i>{SITE.name} <span lang="te">{SITE.nameTe}</span></p>
+      <p class="ft-line">Have something that needs building? I'd like to hear about it.</p>
+      <div class="ft-actions">
+        {actions.map((a) => <Btn label={a.label} href={a.href} ghost={a.ghost} />)}
       </div>
+    </div>
+    <div>
+      <p class="ft-h">Menu</p>
       <ul>{pages.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+    </div>
+    <div>
+      <p class="ft-h">Elsewhere</p>
       <ul>
         {
           elsewhere.map((l) => (
@@ -46,95 +50,127 @@ const elsewhere = [
           ))
         }
       </ul>
-      <p class="ft-fine">© {new Date().getFullYear()} {SITE.fullName}<br /><span class="no-touch">⌘K / Ctrl K to jump anywhere</span></p>
+    </div>
+    <div>
+      <p class="ft-h">Local time</p>
+      <p class="ft-time"><span data-clock>--:--</span> IST</p>
+      <p class="label">{SITE.location}</p>
     </div>
   </div>
+  <div class="wrap ft-fine label">
+    <span>© {new Date().getFullYear()} {SITE.fullName}</span>
+    <span>{SITE.art.footer}</span>
+  </div>
+  <Art src={footerArt} variant="footer" />
 </footer>
 
 <style>
   .ft {
-    padding-top: 40px;
-    border-top: 1px solid var(--rule);
     margin-top: var(--gap);
+    padding-top: 56px;
+    border-top: 1px solid var(--rule);
   }
 
-  :global(main:has(> .room:last-child)) + .ft {
-    margin-top: 0;
+  .ft-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    gap: 40px 32px;
+  }
+
+  .ft-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font: 400 26px/1 var(--serif);
+    color: var(--blue);
+  }
+
+  .ft-name i {
+    width: 11px;
+    height: 11px;
+    background: var(--blue);
+  }
+
+  .ft-name span {
+    font: 400 14px/1 var(--sans);
+    color: var(--muted);
   }
 
   .ft-line {
-    margin-top: 18px;
-    max-width: 16em;
-    font-size: clamp(36px, 5.6vw, 84px);
-    line-height: 0.96;
-    letter-spacing: -0.05em;
+    margin-top: 16px;
+    max-width: 22em;
+    font-size: 15px;
+    line-height: 1.5;
+    font-style: italic;
+    color: var(--ink-2);
   }
 
   .ft-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 36px;
+    gap: 10px;
+    margin-top: 24px;
   }
 
-  .ft-meta {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
-    gap: 24px;
-    margin-top: clamp(64px, 9vw, 120px);
-    padding-block: 24px 32px;
-    border-top: 1px solid var(--rule);
+  .ft-h {
+    margin-bottom: 16px;
+    font: 400 20px/1 var(--serif);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--blue);
   }
 
-  .ft-meta ul {
+  .ft-grid ul {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 8px;
-    align-content: start;
+    gap: 10px;
   }
 
-  .ft-meta a {
+  .ft-grid ul a {
     text-decoration: none;
+    font-size: 15px;
+    color: var(--ink-2);
   }
 
-  .ft-meta a:hover {
-    color: var(--ink);
+  .ft-grid ul a:hover {
+    color: var(--blue);
   }
 
-  .ft-name {
-    color: var(--ink);
-    margin-bottom: 6px;
-  }
-
-  .ft-name span {
-    color: var(--muted);
-    margin-left: 6px;
+  .ft-time {
+    font: 400 15px/1.5 var(--sans);
+    color: var(--ink-2);
   }
 
   .ft-fine {
-    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin-top: 64px;
+    font-size: 10px;
   }
 
-  @media (hover: none), (pointer: coarse) {
-    .no-touch {
-      display: none;
-    }
+  .ft :global(.art--footer) {
+    margin-top: -8px;
   }
 
-  @media (max-width: 720px) {
-    .ft-meta {
+  .ft :global(.art--footer .art-in) {
+    height: clamp(200px, 30vw, 520px);
+  }
+
+  .ft :global(.art--footer img) {
+    object-position: 50% 100%;
+  }
+
+  @media (max-width: 820px) {
+    .ft-grid {
       grid-template-columns: 1fr 1fr;
     }
 
-    .ft-meta > div {
+    .ft-brand {
       grid-column: 1 / -1;
-    }
-
-    .ft-fine {
-      grid-column: 1 / -1;
-      text-align: left;
     }
   }
 </style>

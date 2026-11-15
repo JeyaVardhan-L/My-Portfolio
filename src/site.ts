@@ -7,12 +7,12 @@ export const SITE = {
   nameTe: 'జయవర్ధన్',
   location: 'Visakhapatnam, India',
   locationTe: 'విశాఖపట్నం',
-  coords: '17.69° N, 83.22° E',
+  coords: '17.69° N · 83.22° E',
   description:
-    'Jeya Vardhan builds systems software and the hardware it runs on: shells, perception pipelines, vision models, rockets, wearables and robots.',
+    'Jeya Vardhan builds systems software and the hardware it runs on: perception pipelines, servers, rockets, wearables and robots.',
 
-  // The "Now" band on the home page.
-  now: 'Learning how transformers work, one attention head at a time.',
+  // A short line shown small at the bottom of the home page hero.
+  now: 'Learning how transformers work',
 
   email: '',
   github: 'https://github.com/JeyaVardhan-L',
@@ -21,18 +21,14 @@ export const SITE = {
 
   // The two sides of the home page. Neither is the "main" one.
   intro: {
-    software: {
-      label: 'Software side',
-      fields: 'Systems · Robotics · Vision · XR',
-      statement:
-        'I write systems software: a Unix shell in C, LiDAR odometry racing a 10 Hz clock, a model that tells drones from birds, and AR and VR tools.',
-    },
-    hardware: {
-      label: 'Hardware side',
-      fields: 'Rockets · Wearables · Robots · Telemetry',
-      statement:
-        'I build hardware: a rocket that steers its own thrust, a mouse you wear on your hand, flight telemetry on a Blue Pill and a soccer robot with 43 A drivers.',
-    },
+    software: { label: 'Software side', fields: 'Systems · Robotics · Vision' },
+    hardware: { label: 'Hardware side', fields: 'Rockets · Wearables · Robots' },
+  },
+
+  // Credits for the engravings in src/assets/art/ (change these if you swap the pictures)
+  art: {
+    hero: 'Fig. 01 — Himalayan view, steel engraving, c. 1860',
+    footer: 'Waves, wood engraving from Picturesque America, 1872',
   },
 
   // "On the bench" list on the hardware side.
@@ -43,7 +39,5 @@ export const SITE = {
     { part: 'Arduino Uno', use: 'Soccer bot, USB–UART bridge' },
     { part: 'MPU6050 IMU', use: 'Telemetry, Air Mouse' },
     { part: 'BTS7960 43 A drivers', use: 'Soccer bot' },
-    { part: 'FlySky 2.4 GHz radio', use: 'Soccer bot' },
-    { part: 'TP4056 + MT3608', use: 'Air Mouse power' },
   ],
 } as const;

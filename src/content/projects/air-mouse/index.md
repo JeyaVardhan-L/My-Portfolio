@@ -4,7 +4,7 @@ summary: "A glove that works as a Bluetooth mouse: point at the screen and the c
 date: 2026-11-14
 side: hardware
 featured: true
-order: 5
+order: 4
 tags: ["ESP32", "C++", "PlatformIO", "Bluetooth HID", "IMU"]
 repo: "https://github.com/JeyaVardhan-L/Air_Mouse"
 demo: "https://jeyavardhan-l.github.io/Air_Mouse/"

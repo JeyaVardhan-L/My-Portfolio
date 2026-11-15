@@ -3,10 +3,11 @@ title: "Batcave Cloud"
 summary: "A private cloud server built with Flask and SQLite that runs around the clock on an old Android tablet."
 date: 2026-09-05
 side: software
-featured: false
-order: 8
+featured: true
+order: 2
 tags: ["Python","Flask","SQLite","Termux"]
 repo: "https://github.com/JeyaVardhan-L/Batcave_Cloud"
+cover: ./cover.png
 specs:
   - { label: "Host", value: "Galaxy Tab S6 Lite, Termux" }
   - { label: "Stack", value: "Flask + SQLite" }

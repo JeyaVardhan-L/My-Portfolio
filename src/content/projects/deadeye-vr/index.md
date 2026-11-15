@@ -8,8 +8,6 @@ order: 11
 tags: ["Unity 6","C#","OpenXR","Quest 2"]
 repo: "https://github.com/JeyaVardhan-L/DEADeyeVR"
 cover: ./cover.png
-gallery:
-  - { src: ./deadeye-scope.png, caption: "Through the scope: a second camera renders the magnified view." }
 specs:
   - { label: "Platform", value: "Meta Quest 2, standalone" }
   - { label: "Runtime", value: "Khronos OpenXR" }

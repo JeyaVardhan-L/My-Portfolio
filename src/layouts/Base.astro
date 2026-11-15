@@ -25,7 +25,7 @@ const ogImage = new URL(image ?? url('/og.png'), Astro.site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#e8e6e0" />
+    <meta name="theme-color" content="#fcfbf8" />
     <script is:inline>
       (function () {
         var d = document.documentElement;
@@ -37,7 +37,7 @@ const ogImage = new URL(image ?? url('/og.png'), Astro.site);
         } catch (e) {}
         d.dataset.side = s === 'hardware' ? 'hardware' : 'software';
         var m = document.querySelector('meta[name="theme-color"]');
-        if (m) m.setAttribute('content', d.dataset.side === 'hardware' ? '#0b0b0b' : '#e8e6e0');
+        if (m) m.setAttribute('content', d.dataset.side === 'hardware' ? '#07080c' : '#fcfbf8');
       })();
     </script>
     <title>{pageTitle}</title>

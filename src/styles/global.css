@@ -5,8 +5,8 @@
 @import '@fontsource/instrument-serif/400-italic.css';
 
 /* ───────────────────────── tokens ─────────────────────────
-   Bone paper, black ink, one indigo. The hardware side is the
-   same system inverted: black paper, bone ink, putty rooms. */
+   Software side: white paper and cobalt ink, like an engraving printed in blue.
+   Hardware side: the same pictures in cobalt rising out of black. */
 
 :root {
   --sans: 'Inter Tight Variable', 'Helvetica Neue', Arial, sans-serif;
@@ -18,69 +18,68 @@
   --gap: clamp(96px, 12vw, 168px);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-  --indigo: #1925aa;
-  --bone: #e8e6e0;
-  --putty: #c4c3b6;
-  --black: #0b0b0b;
+  --cobalt: #2541b2;
+  --indigo: var(--cobalt);
+  --white: #fcfbf8;
+  --black: #07080c;
 
-  --bg: var(--bone);
-  --bg-2: #dedbd3;
-  --ink: var(--black);
-  --ink-2: #2b2a28;
-  --muted: #5f5d57;
-  --rule: rgb(11 11 11 / 0.14);
-  --plate: var(--putty);
-  --line: var(--indigo);
-  --accent: var(--indigo);
+  --bg: var(--white);
+  --bg-2: #f1f0eb;
+  --ink: #14172b;
+  --ink-2: #3a3f5c;
+  --muted: #6d7290;
+  --rule: rgb(37 65 178 / 0.16);
+  --blue: var(--cobalt);
+  --accent: var(--cobalt);
+  --line: var(--cobalt);
+  --plate: var(--bg);
+  --art-paper: #3352d6;
 
-  --inv-bg: var(--black);
-  --inv-bg-2: #171716;
-  --inv-ink: var(--bone);
-  --inv-ink-2: #cfccc5;
-  --inv-muted: #8d8b85;
-  --inv-rule: rgb(232 230 224 / 0.16);
-  --inv-plate: #1b1b19;
-  --inv-line: var(--bone);
-  --inv-accent: #9ea6ff;
+  --room-bg: var(--black);
+  --room-bg-2: #12141c;
+  --room-ink: #ecebe6;
+  --room-ink-2: #c9cad3;
+  --room-muted: #8b8d9a;
+  --room-rule: rgb(236 235 230 / 0.14);
+  --room-blue: #a9b6ff;
 
   color-scheme: light;
 }
 
 :root[data-side='hardware'] {
   --bg: var(--black);
-  --bg-2: #171716;
-  --ink: var(--bone);
-  --ink-2: #cfccc5;
-  --muted: #8d8b85;
-  --rule: rgb(232 230 224 / 0.16);
-  --plate: #1b1b19;
-  --line: var(--bone);
-  --accent: #9ea6ff;
+  --bg-2: #11131a;
+  --ink: #ecebe6;
+  --ink-2: #c9cad3;
+  --muted: #8b8d9a;
+  --rule: rgb(236 235 230 / 0.13);
+  --blue: #a9b6ff;
+  --accent: #a9b6ff;
+  --line: #c3cdff;
+  --plate: var(--bg);
 
-  --inv-bg: var(--putty);
-  --inv-bg-2: #b9b8ab;
-  --inv-ink: var(--black);
-  --inv-ink-2: #2b2a28;
-  --inv-muted: #4c4b45;
-  --inv-rule: rgb(11 11 11 / 0.16);
-  --inv-plate: #b4b3a5;
-  --inv-line: var(--indigo);
-  --inv-accent: var(--indigo);
+  --room-bg: #1b2a86;
+  --room-bg-2: rgb(255 255 255 / 0.07);
+  --room-ink: #f3f1ea;
+  --room-ink-2: #dde0f3;
+  --room-muted: #aeb7e8;
+  --room-rule: rgb(243 241 234 / 0.2);
+  --room-blue: #ffffff;
 
   color-scheme: dark;
 }
 
-/* an inverted "room": black on the software side, putty on the hardware side */
-.inv {
-  --bg: var(--inv-bg);
-  --bg-2: var(--inv-bg-2);
-  --ink: var(--inv-ink);
-  --ink-2: var(--inv-ink-2);
-  --muted: var(--inv-muted);
-  --rule: var(--inv-rule);
-  --plate: var(--inv-plate);
-  --line: var(--inv-line);
-  --accent: var(--inv-accent);
+/* an inverted "room": black on the software side, cobalt on the hardware side */
+.room {
+  --bg: var(--room-bg);
+  --bg-2: var(--room-bg-2);
+  --ink: var(--room-ink);
+  --ink-2: var(--room-ink-2);
+  --muted: var(--room-muted);
+  --rule: var(--room-rule);
+  --blue: var(--room-blue);
+  --accent: var(--room-blue);
+  --line: var(--room-blue);
   background: var(--bg);
   color: var(--ink);
 }
@@ -89,11 +88,12 @@
 .darkroom {
   --bg: #060607;
   --bg-2: #141414;
-  --ink: var(--bone);
-  --ink-2: #cfccc5;
-  --muted: #8d8b85;
-  --rule: rgb(232 230 224 / 0.16);
-  --accent: #9ea6ff;
+  --ink: #ecebe6;
+  --ink-2: #c9cad3;
+  --muted: #8b8d9a;
+  --rule: rgb(236 235 230 / 0.14);
+  --blue: #a9b6ff;
+  --accent: #a9b6ff;
   color-scheme: dark;
 }
 
@@ -161,8 +161,8 @@ a:hover {
 }
 
 ::selection {
-  background: var(--indigo);
-  color: var(--bone);
+  background: var(--cobalt);
+  color: #fff;
 }
 
 h1,
@@ -215,14 +215,10 @@ button {
 }
 
 .label {
-  font: 400 11px/1.45 var(--mono);
-  letter-spacing: 0.02em;
+  font: 400 11px/1.5 var(--mono);
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--muted);
-}
-
-.label--ink {
-  color: var(--ink);
 }
 
 .section {
@@ -237,29 +233,36 @@ button {
   max-width: 34em;
 }
 
-/* Section heading pair: one word flush left, one flush right, a hairline between */
-.split {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: end;
-  gap: clamp(12px, 2vw, 32px);
-  font: 400 clamp(52px, 10.5vw, 156px) / 0.86 var(--sans);
-  letter-spacing: -0.055em;
-}
-
-.split i {
-  justify-self: center;
-  align-self: stretch;
-  width: 1px;
-  background: var(--rule);
+.h-serif {
+  font: 400 clamp(44px, 6vw, 88px) / 0.95 var(--serif);
+  letter-spacing: -0.01em;
+  color: var(--blue);
 }
 
 .display {
-  font: 400 clamp(60px, 11vw, 168px) / 0.88 var(--sans);
-  letter-spacing: -0.055em;
+  font: 400 clamp(68px, 11vw, 168px) / 0.88 var(--serif);
+  letter-spacing: -0.015em;
+  color: var(--blue);
 }
 
-/* Button: a paper label cell and an indigo square with a slash */
+.sec-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.sec-head a.label {
+  text-decoration: none;
+}
+
+.sec-head a.label:hover {
+  color: var(--ink);
+}
+
+/* Button: a white label cell and a cobalt square with a slash */
 .btn {
   display: inline-flex;
   align-items: stretch;
@@ -267,7 +270,7 @@ button {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   text-decoration: none;
-  color: var(--black);
+  color: #14172b;
   white-space: nowrap;
 }
 
@@ -276,13 +279,14 @@ button {
   align-items: center;
   padding: 13px 15px;
   background: #fff;
+  box-shadow: inset 0 0 0 1px var(--rule);
 }
 
 .btn > i {
   display: grid;
   place-items: center;
   width: 40px;
-  background: var(--indigo);
+  background: var(--cobalt);
   color: #fff;
   font-style: normal;
   transition: width 0.45s var(--ease);
@@ -301,7 +305,7 @@ button {
 
 .tag {
   font: 400 11px/1 var(--mono);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--muted);
   padding: 6px 8px;
@@ -315,7 +319,61 @@ button {
   display: none !important;
 }
 
-/* ───────────────────────── diagrams (also styled inside each SVG) ───────────────────────── */
+/* ───────────────────────── engravings (duotone) ─────────────────────────
+   Any black-on-white engraving works. On white, `screen` over cobalt turns
+   black lines blue and leaves the paper white; `multiply` then melts the
+   picture into the page. On black, the picture is printed in cobalt and the
+   top fades into the dark. */
+
+.art {
+  position: relative;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 22%);
+}
+
+.art-in {
+  isolation: isolate;
+  height: 100%;
+  background: var(--cobalt);
+  mix-blend-mode: multiply;
+}
+
+.art-in img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 55%;
+  filter: grayscale(1) contrast(1.1);
+  mix-blend-mode: screen;
+}
+
+.art--hero {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 22%, #000 80%, transparent 100%);
+}
+
+[data-side='hardware'] .art--hero {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 46%, #000 80%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 46%, #000 80%, transparent 100%);
+}
+
+[data-side='hardware'] .art--footer {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 46%);
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 46%);
+}
+
+[data-side='hardware'] .art-in {
+  background: var(--art-paper);
+  mix-blend-mode: normal;
+}
+
+[data-side='hardware'] .art-in img {
+  mix-blend-mode: multiply;
+  filter: none;
+}
+
+/* ───────────────────────── diagrams ───────────────────────── */
 
 .dg {
   width: 100%;
@@ -366,9 +424,9 @@ button {
 
 .post-head h1 {
   margin-top: 16px;
-  font-size: clamp(34px, 4.4vw, 56px);
-  line-height: 1.02;
-  letter-spacing: -0.04em;
+  font: 400 clamp(38px, 5vw, 64px) / 1 var(--serif);
+  letter-spacing: -0.01em;
+  color: var(--blue);
 }
 
 .post-head .lede {
@@ -389,11 +447,9 @@ button {
 }
 
 .prose h2 {
-  margin-top: 2.2em;
-  font-size: 30px;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  color: var(--ink);
+  margin-top: 2em;
+  font: 400 36px/1.05 var(--serif);
+  color: var(--blue);
 }
 
 .prose h3 {
@@ -480,7 +536,7 @@ button {
 
 .prose th {
   font: 400 11px/1.4 var(--mono);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -496,6 +552,67 @@ button {
   color: var(--shiki-dark);
 }
 
+/* ───────────────────────── "see more" expanders ───────────────────────── */
+
+.more-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.8s var(--ease), opacity 0.6s var(--ease);
+}
+
+.more-wrap > div {
+  min-height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  transition: visibility 0s 0.8s;
+}
+
+.more-wrap.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.more-wrap.open > div {
+  visibility: visible;
+  transition: visibility 0s;
+}
+
+.more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.more-btn i {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  font-style: normal;
+  font-size: 15px;
+  color: #fff;
+  background: var(--cobalt);
+  transition: transform 0.5s var(--ease);
+}
+
+.more-btn[aria-expanded='true'] i {
+  transform: rotate(45deg);
+}
+
+.more-btn .t-close,
+.more-btn[aria-expanded='true'] .t-open {
+  display: none;
+}
+
+.more-btn[aria-expanded='true'] .t-close {
+  display: inline;
+}
+
 /* ───────────────────────── transitions ───────────────────────── */
 
 @view-transition {
@@ -508,15 +625,15 @@ button {
   animation-timing-function: var(--ease);
 }
 
-/* the side switch: the new side shows through a growing ink blot */
+/* the side switch: the new side blooms in like ink dropped in water */
 html.inking::view-transition-old(root) {
   animation: none;
 }
 
 html.inking::view-transition-new(root) {
   animation: none;
-  -webkit-mask-image: var(--ink-mask);
-  mask-image: var(--ink-mask);
+  -webkit-mask-image: var(--ink-mask), radial-gradient(closest-side, #000 70%, transparent 100%);
+  mask-image: var(--ink-mask), radial-gradient(closest-side, #000 70%, transparent 100%);
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
 }

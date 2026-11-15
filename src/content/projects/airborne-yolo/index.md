@@ -3,13 +3,11 @@ title: "Airborne YOLO"
 summary: "A YOLO11 detector that tells aircraft, birds and drones apart in sky images, with a radar-style view and an honest look at where it fails."
 date: 2026-11-10
 side: software
-featured: true
-order: 4
+featured: false
+order: 8
 tags: ["Python", "PyTorch", "YOLO11", "Computer vision"]
 repo: "https://github.com/JeyaVardhan-L/Train-YOLO-with-custom-Dataset"
 cover: ./cover.png
-gallery:
-  - { src: ./yolo-failure.png, caption: "A real mistake: a tern labelled as an aircraft with 83% confidence." }
 specs:
   - { label: "Model", value: "YOLO11s, fine-tuned" }
   - { label: "Data", value: "8,888 images, 15,018 labels" }

@@ -4,7 +4,7 @@ summary: "A benchmark that checks whether basic LiDAR odometry can finish inside
 date: 2026-10-07
 side: software
 featured: true
-order: 2
+order: 1
 tags: ["Python","NumPy","SciPy","LiDAR","ICP"]
 repo: "https://github.com/JeyaVardhan-L/Baseline_tests_for_AutoNav"
 cover: ./cover.png

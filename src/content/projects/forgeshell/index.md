@@ -3,10 +3,11 @@ title: "ForgeShell"
 summary: "A Unix shell written from scratch in C, with pipelines, job control and a built-in /proc resource monitor."
 date: 2026-08-25
 side: software
-featured: true
-order: 1
+featured: false
+order: 7
 tags: ["C","Linux","POSIX","Processes","Signals"]
 repo: "https://github.com/JeyaVardhan-L/ForgeShell"
+cover: ./cover.png
 specs:
   - { label: "Language", value: "C99" }
   - { label: "Processes", value: "fork · execvp · waitpid" }

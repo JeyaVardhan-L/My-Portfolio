@@ -19,14 +19,15 @@ changes: edit Markdown, images and `src/site.ts` only.
 | --- | --- |
 | A project | `src/content/projects/<slug>/` — one folder per project |
 | Its text | `src/content/projects/<slug>/index.md` |
-| Its screenshot | `src/content/projects/<slug>/cover.png` (from the project's live site if it has one) |
+| Its cover | `src/content/projects/<slug>/cover.png` (currently a placeholder; Jeya replaces it) |
 | Its diagram | `src/content/projects/<slug>/diagram.svg` (optional, animated, shown as "Fig. 1") |
 | Its extra images | same folder, listed under `gallery:` |
 | Writing | `src/content/writing/<slug>.md` |
 | About page text | `src/content/about.md` |
 | About photo | `src/assets/portrait.jpg` (replace the file, keep the name) |
 | Inspiration wall | `src/assets/inspiration/` (any .jpg/.png/.webp; sorted by file name, Z to A) |
-| Name, home statements, links, "Now" line, bench list | `src/site.ts` |
+| Name, side labels, links, "Now" line, bench list, art credits | `src/site.ts` |
+| Engravings (home hero, footer) | `src/assets/art/hero.jpg`, `footer.jpg` |
 | Colours and fonts | `src/styles/global.css` |
 | Templates to copy | `templates/project/`, `templates/writing.md` |
 
@@ -35,11 +36,9 @@ changes: edit Markdown, images and `src/site.ts` only.
 1. Copy `templates/project/` to `src/content/projects/<slug>/`. The slug is
    lowercase-with-dashes and becomes `/projects/<slug>/`.
 2. Fill the frontmatter in `index.md` (fields below). Delete the comments.
-3. Cover image: if the project has a live site, take a 1440×900 screenshot of
-   it and save it as `cover.png` in the folder. Otherwise use a real screenshot
-   or photo from the repository. If there is no real picture, remove the
-   `cover:` line; if the folder has a `diagram.svg`, that is shown instead.
-   Never use made-up or generated mock-ups.
+3. Cover image: Jeya supplies the real picture. Save it as `cover.png` (or .jpg,
+   updating `cover:`) in the folder and resize it to 1600×1000 if needed. Until
+   then, keep the placeholder cover. Never invent screenshots or mock-ups.
 4. Write the body from Jeya's notes (see Voice). Keep the template's sections
    only where there is something real to say.
 5. `npm run check`, then commit as `Add project: <title>` and push to `main`.
@@ -120,12 +119,20 @@ real ones. Commit as `Add inspiration`.
 
 ## Design rules (for anyone changing the look)
 
-- Bone `#e8e6e0` paper, black `#0b0b0b` ink, one indigo `#1925aa`. The
-  hardware side inverts paper and ink. No other colours.
-- Inter Tight for text and big headings, IBM Plex Mono for small uppercase
-  labels, Instrument Serif only for the name on the home page.
-- Square corners, hairline rules, no shadows on page elements.
-- Buttons are the white label cell with the indigo `/` square (`Btn.astro`).
+- Software side: white `#fcfbf8` paper, cobalt `#2541b2` for headings and the
+  engravings, near-black text. Hardware side: black `#07080c` paper with the
+  same engravings printed in cobalt. Writing sits in a dark room (cobalt on the
+  hardware side). No other colours.
+- Engravings are plain black-on-white greyscale images; CSS blend modes turn
+  them blue (`.art` in `src/styles/global.css`). To swap one, use a public-domain
+  engraving, convert it to greyscale with a white sky, and update its credit in
+  `src/site.ts`.
+- Instrument Serif for the name and section headings, Inter Tight for text,
+  IBM Plex Mono for small uppercase labels.
+- Square corners, hairline rules, no shadows on page elements, no vertical
+  bars between words.
+- Home shows two projects per side; the rest open with "See more".
+- Buttons are the white label cell with the cobalt `/` square (`Btn.astro`).
 
 ## Don't
 

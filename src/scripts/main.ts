@@ -1,5 +1,5 @@
 import './side';
 import './peek';
 import './win';
-import './palette';
+import './more';
 import './ambient';

@@ -8,8 +8,6 @@ order: 10
 tags: ["Unity 6","C#","ARCore","Android"]
 repo: "https://github.com/JeyaVardhan-L/AR_Gear_Mechanisms"
 cover: ./cover.png
-gallery:
-  - { src: ./mechxr-exploded.png, caption: "The differential in exploded view, placed on a real desk." }
 specs:
   - { label: "Engine", value: "Unity 6 LTS" }
   - { label: "Tracking", value: "ARCore, 6-DoF planes" }

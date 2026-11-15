@@ -24,7 +24,6 @@ const { entry, prev, next } = Astro.props;
 const { Content } = await render(entry);
 const d = entry.data;
 const hasDiagram = Boolean(diagramOf(entry.id));
-const portrait = d.cover ? d.cover.height > d.cover.width : false;
 const og = d.cover ? (await getImage({ src: d.cover, width: 1200, format: 'jpg' })).src : undefined;
 ---
 
@@ -45,18 +44,19 @@ const og = d.cover ? (await getImage({ src: d.cover, width: 1200, format: 'jpg' 
       </div>
     </header>
 
-    <figure class:list={['wrap ph-cover rise', { portrait }]} style="--i: 3">
-      <div class:list={['ph-media', { drawn: !d.cover }]}>
-        {
-          d.cover ? (
-            <Image src={d.cover} alt={`${d.title}, screenshot`} widths={[720, 1200, 1800]} sizes="(min-width: 1340px) 1240px, 100vw" loading="eager" />
-          ) : (
+    {
+      d.cover ? (
+        <figure class="wrap ph-cover rise" style="--i: 3">
+          <Image src={d.cover} alt={`${d.title}, cover image`} widths={[720, 1200, 1800]} sizes="(min-width: 1340px) 1240px, 100vw" loading="eager" />
+        </figure>
+      ) : (
+        hasDiagram && (
+          <figure class="wrap ph-drawn rise" style="--i: 3">
             <Diagram id={entry.id} />
-          )
-        }
-      </div>
-      <figcaption class="label">{d.cover ? (d.demo ? 'From the live site' : 'Screenshot') : 'Fig. 1 — How it works'}</figcaption>
-    </figure>
+          </figure>
+        )
+      )
+    }
 
     <div class="wrap ph-grid">
       <aside class="specs">
@@ -87,9 +87,7 @@ const og = d.cover ? (await getImage({ src: d.cover, width: 1200, format: 'jpg' 
         {
           d.cover && hasDiagram && (
             <figure class="ph-fig">
-              <div class="ph-fig-plate">
-                <Diagram id={entry.id} />
-              </div>
+              <Diagram id={entry.id} />
               <figcaption class="label">Fig. 1 — How it works</figcaption>
             </figure>
           )
@@ -164,7 +162,7 @@ const og = d.cover ? (await getImage({ src: d.cover, width: 1200, format: 'jpg' 
     align-items: flex-end;
     flex-wrap: wrap;
     gap: 24px 48px;
-    margin-top: 32px;
+    margin-top: 28px;
   }
 
   .ph-btns {
@@ -178,30 +176,16 @@ const og = d.cover ? (await getImage({ src: d.cover, width: 1200, format: 'jpg' 
     margin-bottom: 0;
   }
 
-  .ph-media {
-    background: var(--plate);
-    overflow: hidden;
-  }
-
-  .ph-media :global(img) {
+  .ph-cover :global(img) {
     width: 100%;
     height: auto;
+    box-shadow: 0 0 0 1px var(--rule);
   }
 
-  .ph-cover.portrait .ph-media :global(img) {
-    width: auto;
-    max-height: 78vh;
-    margin-inline: auto;
-    padding-block: 32px;
-  }
-
-  .ph-media.drawn {
-    aspect-ratio: 16 / 10;
-    padding: 4% 8%;
-  }
-
-  .ph-cover figcaption {
-    margin-top: 12px;
+  .ph-drawn {
+    margin-top: clamp(48px, 7vw, 88px);
+    margin-bottom: 0;
+    max-width: 980px;
   }
 
   .ph-grid {
@@ -249,12 +233,6 @@ const og = d.cover ? (await getImage({ src: d.cover, width: 1200, format: 'jpg' 
     max-width: 44rem;
   }
 
-  .ph-fig-plate {
-    aspect-ratio: 600 / 440;
-    padding: 4%;
-    background: var(--plate);
-  }
-
   .ph-fig figcaption {
     margin-top: 12px;
   }
@@ -273,9 +251,6 @@ const og = d.cover ? (await getImage({ src: d.cover, width: 1200, format: 'jpg' 
   .gallery :global(img) {
     width: 100%;
     height: auto;
-    max-height: 80vh;
-    object-fit: contain;
-    background: var(--plate);
   }
 
   .gallery figcaption {
@@ -303,13 +278,8 @@ const og = d.cover ? (await getImage({ src: d.cover, width: 1200, format: 'jpg' 
   }
 
   .pager-title {
-    font-size: clamp(22px, 2.4vw, 34px);
-    letter-spacing: -0.035em;
-    transition: color 0.3s;
-  }
-
-  .pager a:hover .pager-title {
-    color: var(--accent);
+    font: 400 clamp(26px, 2.8vw, 40px) / 1 var(--serif);
+    color: var(--blue);
   }
 
   @media (max-width: 860px) {

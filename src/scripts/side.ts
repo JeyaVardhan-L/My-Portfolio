@@ -6,19 +6,23 @@ const KEY = 'side';
 export const getSide = (): Side => (root.dataset.side === 'hardware' ? 'hardware' : 'software');
 export const otherSide = (): Side => (getSide() === 'hardware' ? 'software' : 'hardware');
 
-// An ink blot with a ragged edge and a few drops around it. It is used as a
-// mask on the incoming view, scaled up from the point where the switch was hit.
+// A cloud of ink with soft, billowing edges, like a drop spreading in water.
+// It is the first of two mask layers on the incoming view; the second is a
+// plain soft-edged disc that grows behind it so the screen always fills.
 const INK = (() => {
   const svg =
     "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'>" +
-    "<filter id='f' x='-30%' y='-30%' width='160%' height='160%'>" +
-    "<feTurbulence type='fractalNoise' baseFrequency='0.045' numOctaves='3' seed='11'/>" +
-    "<feDisplacementMap in='SourceGraphic' scale='24' xChannelSelector='R' yChannelSelector='G'/>" +
-    '</filter>' +
+    "<defs><radialGradient id='g'><stop offset='0.4' stop-color='#000'/><stop offset='1' stop-color='#000' stop-opacity='0'/></radialGradient>" +
+    "<filter id='f' x='-50%' y='-50%' width='200%' height='200%'>" +
+    "<feTurbulence type='fractalNoise' baseFrequency='0.02' numOctaves='4' seed='7'/>" +
+    "<feDisplacementMap in='SourceGraphic' scale='64' xChannelSelector='R' yChannelSelector='B'/>" +
+    "<feGaussianBlur stdDeviation='1.6'/></filter></defs>" +
     "<g filter='url(#f)'>" +
-    "<circle cx='100' cy='100' r='64'/>" +
-    "<circle cx='166' cy='72' r='6'/><circle cx='36' cy='140' r='4.5'/>" +
-    "<circle cx='152' cy='160' r='8'/><circle cx='52' cy='42' r='3.5'/><circle cx='178' cy='120' r='3'/>" +
+    "<circle cx='100' cy='100' r='58' fill='url(#g)'/>" +
+    "<ellipse cx='150' cy='68' rx='30' ry='16' fill='url(#g)'/>" +
+    "<ellipse cx='56' cy='150' rx='20' ry='32' fill='url(#g)'/>" +
+    "<ellipse cx='146' cy='152' rx='22' ry='14' fill='url(#g)'/>" +
+    "<ellipse cx='52' cy='56' rx='16' ry='22' fill='url(#g)'/>" +
     '</g></svg>';
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 })();
@@ -26,7 +30,7 @@ const INK = (() => {
 function syncUI() {
   const hw = getSide() === 'hardware';
   document.querySelectorAll('[data-side-switch]').forEach((b) => b.setAttribute('aria-checked', String(hw)));
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', hw ? '#0b0b0b' : '#e8e6e0');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', hw ? '#07080c' : '#fcfbf8');
 }
 
 function apply(next: Side) {
@@ -35,7 +39,6 @@ function apply(next: Side) {
     localStorage.setItem(KEY, next);
   } catch {}
   syncUI();
-  document.dispatchEvent(new CustomEvent('sidechange', { detail: next }));
 }
 
 export function setSide(next: Side, origin?: { x: number; y: number }) {
@@ -50,10 +53,31 @@ export function setSide(next: Side, origin?: { x: number; y: number }) {
   const h = innerHeight;
   const x = origin?.x ?? w - 60;
   const y = origin?.y ?? 40;
-  // the blot's solid core is ~30% of the mask, so the mask must be ~3.6x the
-  // distance to the farthest corner to cover the screen
   const far = Math.hypot(Math.max(x, w - x), Math.max(y, h - y));
-  const size = Math.ceil(far * 3.7);
+  // the soft disc is solid out to 35% of its box, so 2.9x the farthest
+  // distance covers the screen; the ink cloud runs ahead of it
+  const disc = Math.ceil(far * 2.9);
+  const ink = Math.ceil(disc * 1.3);
+
+  const frame = (k: number, j: number) => {
+    const s = ink * k;
+    const d = disc * j;
+    return {
+      size: `${s}px ${s}px, ${d}px ${d}px`,
+      pos: `${x - s / 2}px ${y - s / 2}px, ${x - d / 2}px ${y - d / 2}px`,
+    };
+  };
+  const frames = [
+    { offset: 0, ...frame(0, 0) },
+    { offset: 0.55, ...frame(0.62, 0.34) },
+    { offset: 1, ...frame(1, 1) },
+  ].map((f) => ({
+    offset: f.offset,
+    maskSize: f.size,
+    maskPosition: f.pos,
+    webkitMaskSize: f.size,
+    webkitMaskPosition: f.pos,
+  }));
 
   root.style.setProperty('--ink-mask', INK);
   root.classList.add('inking');
@@ -61,22 +85,12 @@ export function setSide(next: Side, origin?: { x: number; y: number }) {
 
   t.ready
     .then(() => {
-      const sizes = ['0px 0px', `${size}px ${size}px`];
-      const positions = [`${x}px ${y}px`, `${x - size / 2}px ${y - size / 2}px`];
-      root.animate(
-        {
-          maskSize: sizes,
-          maskPosition: positions,
-          webkitMaskSize: sizes,
-          webkitMaskPosition: positions,
-        } as unknown as PropertyIndexedKeyframes,
-        {
-          duration: 1250,
-          easing: 'cubic-bezier(0.62, 0, 0.28, 1)',
-          pseudoElement: '::view-transition-new(root)',
-          fill: 'both',
-        },
-      );
+      root.animate(frames as unknown as Keyframe[], {
+        duration: 1600,
+        easing: 'cubic-bezier(0.3, 0.15, 0.2, 1)',
+        pseudoElement: '::view-transition-new(root)',
+        fill: 'both',
+      });
     })
     .catch(() => {});
 
