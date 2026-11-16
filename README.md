@@ -1,6 +1,6 @@
 # Jeya Vardhan
 
-My portfolio: **https://jeyavardhan-l.github.io/My-Portfolio/**
+My portfolio: **https://jeyavardhan.dev**
 
 Built with [Astro](https://astro.build). Every push to `main` deploys it to
 GitHub Pages.
@@ -29,18 +29,25 @@ For inspiration photos, no agent needed: drop images into
 
 ```bash
 npm install
-npm run dev      # http://localhost:4321/My-Portfolio/
+npm run dev      # http://localhost:4321/
 npm run check    # what CI runs before deploying
 ```
 
-## Using a custom domain
+## The domain
 
-1. Buy or claim the domain, then add a `CNAME` DNS record pointing to
-   `jeyavardhan-l.github.io`.
-2. In `astro.config.mjs`, set `SITE` to `https://<domain>` and `BASE` to `'/'`.
-3. Create `public/CNAME` containing just the domain.
-4. In the repository settings → Pages, enter the domain and tick
-   "Enforce HTTPS" once it is offered.
+`jeyavardhan.dev` is registered at name.com and verified on the GitHub
+account (profile Settings → Pages). Its DNS at name.com points to GitHub Pages:
+
+| Type | Host | Answer |
+| --- | --- | --- |
+| A | (blank) | `185.199.108.153`, `.109.153`, `.110.153`, `.111.153` |
+| AAAA | (blank) | `2606:50c0:8000::153`, `8001::153`, `8002::153`, `8003::153` |
+| CNAME | `www` | `jeyavardhan-l.github.io` |
+| TXT | `_github-pages-challenge-jeyavardhan-l` | GitHub's verification code |
+
+The repo's Settings → Pages has `jeyavardhan.dev` as the custom domain with
+HTTPS enforced, and `astro.config.mjs` has `SITE = 'https://jeyavardhan.dev'`,
+`BASE = '/'`. Auto-renewal at name.com is off; renew before 15 Nov 2027.
 
 ## Licence
 

@@ -10,7 +10,7 @@ changes: edit Markdown, images and `src/site.ts` only.
 | Command | What it does |
 | --- | --- |
 | `npm install` | Once, after cloning |
-| `npm run dev` | Local preview at http://localhost:4321/My-Portfolio/ |
+| `npm run dev` | Local preview at http://localhost:4321/ |
 | `npm run check` | Type-check and build. **Must pass before every commit.** |
 
 ## Where things live

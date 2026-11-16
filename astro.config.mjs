@@ -2,12 +2,10 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// Where the site lives. When a custom domain is connected:
-//   1. set SITE to it, e.g. 'https://jeyavardhan.dev'
-//   2. set BASE to '/'
-//   3. put the bare domain (jeyavardhan.dev) in public/CNAME
-const SITE = 'https://jeyavardhan-l.github.io';
-const BASE = '/My-Portfolio';
+// Where the site lives: the custom domain, served from the root.
+// (The domain itself is set in the repo's Settings → Pages; DNS is at name.com.)
+const SITE = 'https://jeyavardhan.dev';
+const BASE = '/';
 
 export default defineConfig({
   site: SITE,
