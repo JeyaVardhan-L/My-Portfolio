@@ -47,7 +47,6 @@ npm run check    # what CI runs before deploying
 Code: MIT (see `LICENSE`). Writing, photos and project images: © Lekkala
 Jeyavardhan, all rights reserved. Inter Tight, IBM Plex Mono and Instrument
 Serif are under the SIL Open Font License. The engravings in `src/assets/art/`
-are old prints: the home comet is a wood engraving of the Great Comet of 1843 from the
-*Illustrated London News*, scanned by
-Wellcome Collection (CC BY 4.0, credited on the page); the footer waves are
-from *Picturesque America*, 1872 (public domain, via Wikimedia Commons).
+are old prints, both public domain via Wikimedia Commons: the home hero is
+J. W. Edy's *Town of Drøbak* from *Boydell's Picturesque Scenery of Norway*,
+1820 (plate 58); the footer waves are from *Picturesque America*, 1872.

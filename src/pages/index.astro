@@ -138,7 +138,7 @@ const posts = (await getPosts()).slice(0, 4);
     margin-top: clamp(20px, 6vh, 88px);
     text-align: center;
     white-space: nowrap;
-    font: 400 clamp(60px, 18.5vw, 360px) / 0.9 var(--serif);
+    font: 400 clamp(52px, 12.5vw, 240px) / 0.9 var(--serif);
     letter-spacing: -0.015em;
     color: var(--blue);
   }
@@ -153,12 +153,18 @@ const posts = (await getPosts()).slice(0, 4);
   .hero :global(.art--hero) {
     flex: 1;
     min-height: 280px;
-    margin-top: calc(-0.06 * 100vw);
+    margin-top: calc(-0.03 * 100vw);
   }
 
+  /* Tall on purpose: the calm sky is room for the name, a tagline and
+     a few lines about me. */
   .hero :global(.art--hero .art-in) {
     height: 100%;
-    min-height: clamp(280px, 52vh, 680px);
+    min-height: clamp(360px, 76vh, 940px);
+  }
+
+  .hero :global(.art--hero img) {
+    object-position: 50% 62%;
   }
 
   .hero-foot {
@@ -247,11 +253,11 @@ const posts = (await getPosts()).slice(0, 4);
 
     .hero :global(.art--hero .art-in) {
       min-height: 0;
-      height: clamp(240px, 64vw, 720px);
+      height: clamp(320px, 96vw, 860px);
     }
 
     .hero :global(.art--hero img) {
-      object-position: 50% 45%;
+      object-position: 62% 60%;
     }
   }
 
