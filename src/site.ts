@@ -25,19 +25,24 @@ export const SITE = {
     hardware: { label: 'Hardware side', fields: 'Rockets · Wearables · Robots' },
   },
 
-  // Credits for the engravings in src/assets/art/ (change these if you swap the pictures)
+  // Credit for the footer engraving. (The home hero, Edy's Drøbak, 1820, is
+  // public domain and credited in the README only.)
   art: {
-    hero: 'Fig. 01 — Drøbak, Norway · J. W. Edy, Picturesque Scenery of Norway, 1820',
     footer: 'Waves, wood engraving from Picturesque America, 1872',
   },
 
-  // "On the bench" list on the hardware side.
-  bench: [
-    { part: 'STM32F103 “Blue Pill”', use: 'Flight telemetry' },
-    { part: 'Teensy 4.1', use: 'TVC rocket flight computer' },
-    { part: 'ESP32 WROOM-32', use: 'Air Mouse' },
-    { part: 'Arduino Uno', use: 'Soccer bot, USB–UART bridge' },
-    { part: 'MPU6050 IMU', use: 'Telemetry, Air Mouse' },
-    { part: 'BTS7960 43 A drivers', use: 'Soccer bot' },
-  ],
+  // "On the bench" on the hardware side: the one thing being built right now.
+  // The drawing next to it is src/components/CanSat.astro.
+  bench: {
+    title: 'CanSat',
+    status: 'In progress',
+    summary:
+      'A satellite the size of a soda can. It carries sensors and a camera to record the flight, a gyro stabiliser, and a parachute that deploys on the way down. I am building it now. Next comes the launch vehicle that will carry it up.',
+    specs: [
+      { label: 'Payload', value: 'Sensors + camera' },
+      { label: 'Stabilisation', value: 'Gyro stabiliser' },
+      { label: 'Recovery', value: 'Deployable parachute' },
+      { label: 'Next', value: 'Launch vehicle' },
+    ],
+  },
 } as const;

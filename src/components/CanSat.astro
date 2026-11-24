@@ -1,0 +1,122 @@
+---
+// The CanSat on the bench: a cutaway of the can (left) and the flight it is
+// built for (right), drawn on graph paper. Hand-written SVG with SMIL
+// animation, in the same line style as the project diagrams.
+---
+
+<svg xmlns="http://www.w3.org/2000/svg" class="dg cansat" viewBox="0 0 720 420" role="img">
+  <title>CanSat: a cutaway showing the parachute bay, sensors, gyro stabiliser and camera, and its flight: carried up by a launch vehicle, released at the top, then coming down under its parachute while the camera and sensors record</title>
+  <style>
+    .dg-ln{fill:none;stroke:var(--line,#2541b2);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}.dg-thin{stroke-width:.75;opacity:.55}.dg-dash{stroke-dasharray:4 5}.dg-fc{fill:var(--line,#2541b2)}.dg-box{fill:var(--plate,#fcfbf8);stroke:var(--line,#2541b2);stroke-width:1.25}.dg-t{font-family:var(--mono, ui-monospace, Menlo, monospace);font-size:12px;letter-spacing:.04em;fill:var(--ink,#14172b)}.dg-s{font-family:var(--mono, ui-monospace, Menlo, monospace);font-size:9.5px;letter-spacing:.05em;fill:var(--muted,#6d7290)}.dg-m{text-anchor:middle}.dg-e{text-anchor:end}.dg-grid{fill:none;stroke:var(--line,#2541b2)}
+  </style>
+  <defs>
+    <pattern id="cs-g1" width="16" height="16" patternUnits="userSpaceOnUse">
+      <path class="dg-grid" d="M16 0 H0 V16" stroke-width=".5" opacity=".14" />
+    </pattern>
+    <pattern id="cs-g2" width="80" height="80" patternUnits="userSpaceOnUse">
+      <rect width="80" height="80" fill="url(#cs-g1)" />
+      <path class="dg-grid" d="M80 0 H0 V80" stroke-width=".75" opacity=".26" />
+    </pattern>
+    <path id="cs-up" d="M430 370 C 436 260, 452 150, 500 88" />
+    <path id="cs-down" d="M500 94 C 520 160, 560 250, 600 366" />
+  </defs>
+
+  <rect width="720" height="420" fill="url(#cs-g2)" />
+  <path class="dg-ln dg-thin" d="M8 18 H28 M18 8 V28 M692 18 H712 M702 8 V28 M8 402 H28 M18 392 V412 M692 402 H712 M702 392 V412" />
+
+  <!-- ── the can, cut away ── -->
+  <text class="dg-s" x="60" y="44">CANSAT · CUTAWAY</text>
+  <rect class="dg-box" x="60" y="70" width="100" height="250" />
+  <ellipse class="dg-box" cx="110" cy="70" rx="50" ry="9" />
+  <path class="dg-ln" d="M60 320 A50 9 0 0 0 160 320" />
+  <path class="dg-ln dg-thin" d="M60 130 H160 M60 190 H160 M60 255 H160" />
+
+  <!-- parachute, folded in its bay -->
+  <path class="dg-ln" d="M72 118 L80 92 L88 118 L96 92 L104 118 L112 92 L120 118 L128 92 L136 118 L144 92 L148 118" />
+  <path class="dg-ln dg-thin" d="M72 124 H148" />
+
+  <!-- sensor board -->
+  <rect class="dg-box" x="72" y="144" width="76" height="34" />
+  <rect class="dg-fc" x="80" y="152" width="14" height="10" />
+  <rect class="dg-fc" x="100" y="152" width="9" height="9" opacity=".6" />
+  <rect class="dg-fc" x="115" y="152" width="9" height="9" opacity=".6" />
+  <path class="dg-ln dg-thin" d="M80 170 H140 M130 152 V162 M136 152 V162" />
+  <circle class="dg-fc" cx="141" cy="150" r="1.6">
+    <animate attributeName="opacity" values="1;0.15;1" dur="1.2s" repeatCount="indefinite" />
+  </circle>
+
+  <!-- gyro stabiliser: two gimbal rings turning -->
+  <circle class="dg-ln" cx="110" cy="222" r="26" />
+  <ellipse class="dg-ln" cx="110" cy="222" rx="26" ry="8">
+    <animate attributeName="ry" values="8;26;8" dur="3.6s" repeatCount="indefinite" />
+  </ellipse>
+  <ellipse class="dg-ln dg-thin" cx="110" cy="222" rx="10" ry="26">
+    <animate attributeName="rx" values="10;26;2;10" dur="4.8s" repeatCount="indefinite" />
+  </ellipse>
+  <circle class="dg-fc" cx="110" cy="222" r="3.5" />
+
+  <!-- camera looking down -->
+  <rect class="dg-box" x="88" y="268" width="44" height="36" />
+  <circle class="dg-ln" cx="110" cy="318" r="7" />
+  <circle class="dg-fc" cx="110" cy="318" r="2.5" />
+  <path class="dg-ln dg-dash" d="M104 326 L78 372 M116 326 L142 372" />
+  <circle class="dg-fc" cx="124" cy="276" r="2">
+    <animate attributeName="opacity" values="1;1;0.1;0.1" keyTimes="0;0.5;0.5;1" dur="1.6s" repeatCount="indefinite" />
+  </circle>
+
+  <!-- labels -->
+  <path class="dg-ln dg-thin" d="M160 100 H176 M160 160 H176 M160 222 H176 M160 286 H176" />
+  <text class="dg-t" x="182" y="100">PARACHUTE</text>
+  <text class="dg-s" x="182" y="114">DEPLOYS ON THE WAY DOWN</text>
+  <text class="dg-t" x="182" y="160">SENSORS</text>
+  <text class="dg-s" x="182" y="174">LOG THE FLIGHT</text>
+  <text class="dg-t" x="182" y="222">GYRO</text>
+  <text class="dg-s" x="182" y="236">STABILISER</text>
+  <text class="dg-t" x="182" y="286">CAMERA</text>
+  <text class="dg-s" x="182" y="300">RECORDS THE DROP</text>
+
+  <path class="dg-ln dg-thin dg-dash" d="M338 44 V392" />
+
+  <!-- ── the flight ── -->
+  <text class="dg-s" x="360" y="44">MISSION PROFILE · NOT TO SCALE</text>
+  <path class="dg-ln" d="M362 62 V370 H704" />
+  <path class="dg-ln dg-thin" d="M358 110 H366 M358 170 H366 M358 230 H366 M358 290 H366" />
+  <text class="dg-s" x="370" y="70">ALT</text>
+  <text class="dg-s dg-e" x="704" y="388">GROUND</text>
+
+  <use href="#cs-up" class="dg-ln dg-dash" />
+  <use href="#cs-down" class="dg-ln dg-thin dg-dash" />
+  <circle class="dg-fc" cx="500" cy="88" r="3" />
+  <text class="dg-s" x="512" y="84">APOGEE · RELEASE</text>
+  <path class="dg-ln dg-thin" d="M509 128 H522" />
+  <text class="dg-s" x="528" y="131">CHUTE OUT</text>
+  <path class="dg-ln" d="M594 360 L606 372 M606 360 L594 372" />
+  <text class="dg-s" x="614" y="358">LANDING</text>
+  <text class="dg-t" x="446" y="300">LAUNCH VEHICLE</text>
+  <text class="dg-s" x="446" y="314">BUILDING NEXT</text>
+  <text class="dg-s" x="578" y="236">CAMERA + SENSORS</text>
+  <text class="dg-s" x="578" y="249">RECORDING</text>
+
+  <!-- the rocket climbs -->
+  <g opacity="0">
+    <path class="dg-fc" d="M-8 -3 L5 -3 L10 0 L5 3 L-8 3 Z" />
+    <animateMotion dur="9s" repeatCount="indefinite" rotate="auto" keyPoints="0;1;1" keyTimes="0;0.34;1" calcMode="linear">
+      <mpath href="#cs-up" />
+    </animateMotion>
+    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.34;0.35;1" dur="9s" repeatCount="indefinite" />
+  </g>
+
+  <!-- the can comes down under its chute -->
+  <g opacity="0">
+    <g>
+      <path class="dg-box" d="M-13 -19 Q0 -34 13 -19 Z" />
+      <path class="dg-ln dg-thin" d="M-13 -19 L-3 -5 M13 -19 L3 -5" />
+      <animateTransform attributeName="transform" type="scale" values="0;0;1;1" keyTimes="0;0.4;0.46;1" dur="9s" repeatCount="indefinite" />
+    </g>
+    <rect class="dg-box" x="-4" y="-5" width="8" height="11" />
+    <animateMotion dur="9s" repeatCount="indefinite" keyPoints="0;0;1;1" keyTimes="0;0.35;0.94;1" calcMode="linear">
+      <mpath href="#cs-down" />
+    </animateMotion>
+    <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.34;0.35;0.97;1" dur="9s" repeatCount="indefinite" />
+  </g>
+</svg>

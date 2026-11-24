@@ -26,7 +26,9 @@ changes: edit Markdown, images and `src/site.ts` only.
 | About page text | `src/content/about.md` |
 | About photo | `src/assets/portrait.jpg` (replace the file, keep the name) |
 | Inspiration wall | `src/assets/inspiration/` (any .jpg/.png/.webp; sorted by file name, Z to A) |
-| Name, side labels, links, "Now" line, bench list, art credits | `src/site.ts` |
+| Name, side labels, links, "Now" line, "On the bench" text, footer art credit | `src/site.ts` |
+| "On the bench" drawing (the CanSat) | `src/components/CanSat.astro` (hand-written animated SVG on graph paper) |
+| Gallery photos (the spinning sphere behind the "Gallery" button) | `src/assets/gallery/` (any .jpg/.png/.webp; until it has photos, the inspiration placeholders stand in) |
 | Engravings (home hero, footer) | `src/assets/art/hero.jpg`, `footer.jpg` |
 | Colours and fonts | `src/styles/global.css` |
 | Templates to copy | `templates/project/`, `templates/writing.md` |

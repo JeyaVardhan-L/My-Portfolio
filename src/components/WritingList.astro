@@ -42,10 +42,10 @@ const { items } = Astro.props;
 
   .wr a {
     display: grid;
-    grid-template-columns: 110px minmax(0, 1fr) 72px;
+    grid-template-columns: 96px minmax(0, 1fr) 64px;
     gap: 16px;
     align-items: baseline;
-    padding: 26px 12px;
+    padding: 15px 12px;
     margin-inline: -12px;
     border-top: 1px solid var(--rule);
     text-decoration: none;
@@ -59,20 +59,21 @@ const { items } = Astro.props;
 
   .wr-title {
     display: block;
-    font-size: clamp(21px, 2vw, 28px);
-    line-height: 1.1;
-    letter-spacing: -0.03em;
+    font-size: clamp(17px, 1.3vw, 19px);
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
   }
 
   .wr-sum {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    margin-top: 8px;
-    max-width: 44em;
+    margin-top: 3px;
+    max-width: 52em;
     color: var(--muted);
-    font-size: 15px;
+    font-size: 14px;
     line-height: 1.45;
   }
 
@@ -125,7 +126,11 @@ const { items } = Astro.props;
   @media (max-width: 720px) {
     .wr a {
       grid-template-columns: minmax(0, 1fr) auto;
-      gap: 8px 12px;
+      gap: 6px 12px;
+    }
+
+    .wr-sum {
+      -webkit-line-clamp: 2;
     }
 
     .wr-main {

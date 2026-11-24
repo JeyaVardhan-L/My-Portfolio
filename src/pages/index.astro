@@ -3,6 +3,9 @@ import Base from '../layouts/Base.astro';
 import Art from '../components/Art.astro';
 import ProjectRows from '../components/ProjectRows.astro';
 import WritingList from '../components/WritingList.astro';
+import Btn from '../components/Btn.astro';
+import CanSat from '../components/CanSat.astro';
+import Gallery from '../components/Gallery.astro';
 import heroArt from '../assets/art/hero.jpg';
 import { SITE } from '../site';
 import { getPosts, getProjects, onSide, url } from '../lib/site';
@@ -39,8 +42,7 @@ const posts = (await getPosts()).slice(0, 4);
     <Art src={heroArt} variant="hero" eager />
 
     <div class="wrap hero-foot label">
-      <p>{SITE.art.hero}</p>
-      {SITE.now && <p class="hero-now"><i aria-hidden="true"></i>Now · {SITE.now}</p>}
+      {SITE.now ? <p class="hero-now"><i aria-hidden="true"></i>Now · {SITE.now}</p> : <span />}
       <a href="#work">Scroll ↓</a>
     </div>
   </section>
@@ -79,19 +81,40 @@ const posts = (await getPosts()).slice(0, 4);
   <section class="wrap section hw-only">
     <div class="sec-head">
       <h2 class="h-serif">On the bench</h2>
-      <p class="label">Parts that keep showing up</p>
+      <p class="label">What I am building now</p>
     </div>
-    <dl class="bench">
-      {
-        SITE.bench.map((b) => (
-          <div>
-            <dt>{b.part}</dt>
-            <dd class="label">{b.use}</dd>
-          </div>
-        ))
-      }
-    </dl>
+    <div class="build">
+      <div class="build-text">
+        <p class="label build-flag"><i aria-hidden="true"></i>{SITE.bench.status}</p>
+        <h3 class="build-title">{SITE.bench.title}</h3>
+        <p class="build-sum">{SITE.bench.summary}</p>
+        <dl class="build-specs">
+          {
+            SITE.bench.specs.map((s) => (
+              <div>
+                <dt class="label">{s.label}</dt>
+                <dd>{s.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+      <figure class="build-fig">
+        <CanSat />
+      </figure>
+    </div>
   </section>
+
+  <section class="wrap section gal-band">
+    <div class="gal-row">
+      <div>
+        <p class="label">Gallery</p>
+        <p class="gal-note">Builds, tests and places, floating on a sphere you can spin.</p>
+      </div>
+      <Btn label="Gallery" data-gallery-open="" />
+    </div>
+  </section>
+  <Gallery />
 
   {
     posts.length > 0 && (
@@ -207,26 +230,92 @@ const posts = (await getPosts()).slice(0, 4);
     padding-top: 24px;
   }
 
-  .bench {
-    margin: 0;
+  .build {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(24px, 4vw, 56px);
+    align-items: center;
+    padding-top: 28px;
   }
 
-  .bench div {
+  .build-flag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--blue);
+  }
+
+  .build-flag i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
+    animation: blink 1.6s steps(2, start) infinite;
+  }
+
+  @keyframes blink {
+    to {
+      opacity: 0.2;
+    }
+  }
+
+  .build-title {
+    margin-top: 10px;
+    font: 400 clamp(38px, 4.4vw, 60px) / 1 var(--serif);
+    color: var(--blue);
+  }
+
+  .build-sum {
+    margin-top: 14px;
+    max-width: 32em;
+    color: var(--ink-2);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .build-specs {
+    margin: 22px 0 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .build-specs div {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 16px;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 12px;
     align-items: baseline;
-    padding: 18px 0;
+    padding: 9px 0;
     border-bottom: 1px solid var(--rule);
   }
 
-  .bench dt {
-    font-size: clamp(19px, 1.7vw, 23px);
-    letter-spacing: -0.02em;
+  .build-specs dd {
+    margin: 0;
+    font-size: 14px;
   }
 
-  .bench dd {
+  .build-fig {
     margin: 0;
+    box-shadow: inset 0 0 0 1px var(--rule);
+  }
+
+  .build-fig :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .gal-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px 24px;
+    padding: 18px 0;
+    border-block: 1px solid var(--rule);
+  }
+
+  .gal-note {
+    margin-top: 4px;
+    color: var(--ink-2);
+    font-size: 15px;
   }
 
   .writing {
@@ -278,9 +367,16 @@ const posts = (await getPosts()).slice(0, 4);
       gap: 6px;
     }
 
-    .more-row {
+    .more-row,
+    .gal-row {
       flex-direction: column;
       align-items: flex-start;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .build {
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 </style>
