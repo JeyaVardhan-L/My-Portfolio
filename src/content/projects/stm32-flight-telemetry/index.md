@@ -4,7 +4,7 @@ summary: "An STM32 reads a 6-axis IMU, fuses it into attitude on the chip, and s
 date: 2026-05-03
 side: both
 featured: false
-order: 5
+order: 8
 tags: ["C","STM32","I²C","Web Serial","Three.js"]
 repo: "https://github.com/JeyaVardhan-L/STM32-Flight_Telemetry"
 cover: ./cover.png

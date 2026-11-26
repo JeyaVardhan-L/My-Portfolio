@@ -4,7 +4,7 @@ summary: "An electric rocket that steers by tilting its own thrust, built in two
 date: 2026-11-10
 side: hardware
 featured: true
-order: 3
+order: 6
 status: in progress
 tags: ["Teensy 4.1", "C++", "PID control", "three.js", "CAD"]
 repo: "https://github.com/JeyaVardhan-L/Single-Thrust-Vector-Controlled-Rocket"

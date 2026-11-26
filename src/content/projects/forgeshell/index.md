@@ -4,7 +4,7 @@ summary: "A Unix shell written from scratch in C, with pipelines, job control an
 date: 2026-08-25
 side: software
 featured: false
-order: 7
+order: 10
 tags: ["C","Linux","POSIX","Processes","Signals"]
 repo: "https://github.com/JeyaVardhan-L/ForgeShell"
 cover: ./cover.png

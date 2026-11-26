@@ -6,8 +6,12 @@ import portrait from '../assets/portrait.jpg';
 import { SITE } from '../site';
 import { url } from '../lib/site';
 
+const tel = SITE.phone ? `tel:${SITE.phone.replace(/[^\d+]/g, '')}` : '';
+const contact = [
+  SITE.email && { label: SITE.email, href: `mailto:${SITE.email}` },
+  SITE.phone && { label: SITE.phone, href: tel },
+].filter(Boolean) as { label: string; href: string }[];
 const links = [
-  SITE.email && { label: 'Email', href: `mailto:${SITE.email}` },
   { label: 'GitHub', href: SITE.github },
   SITE.linkedin && { label: 'LinkedIn', href: SITE.linkedin },
   SITE.resume && { label: 'Résumé', href: url(SITE.resume) },
@@ -32,6 +36,14 @@ const links = [
             <dt class="label">Now</dt>
             <dd>{SITE.now}</dd>
           </div>
+          {
+            contact.length > 0 && (
+              <div>
+                <dt class="label">Contact</dt>
+                <dd class="links">{contact.map((l) => <a href={l.href}>{l.label}</a>)}</dd>
+              </div>
+            )
+          }
           <div>
             <dt class="label">Elsewhere</dt>
             <dd class="links">{links.map((l) => <a href={l.href}>{l.label}</a>)}</dd>

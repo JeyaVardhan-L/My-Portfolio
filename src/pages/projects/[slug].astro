@@ -39,7 +39,7 @@ const og = d.cover ? (await getImage({ src: d.cover, width: 1200, format: 'jpg' 
         <p class="lede">{d.summary}</p>
         <div class="ph-btns">
           {d.demo && <Btn label="Live site" href={d.demo} />}
-          {d.repo && <Btn label="Source" href={d.repo} ghost />}
+          {d.repo && <Btn label="GitHub repo" href={d.repo} ghost={Boolean(d.demo)} />}
         </div>
       </div>
     </header>

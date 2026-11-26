@@ -1,89 +1,63 @@
 ---
-title: "AutoNav baseline"
-summary: "A benchmark that checks whether basic LiDAR odometry can finish inside 100 ms on a small onboard computer, using real scans from Oxford's Newer College dataset."
+title: "LiDAR compute sizing"
+summary: "Measures which LiDAR and which onboard computer can run real-time LiDAR odometry, on real recordings with ground truth, before any hardware is bought."
 date: 2026-10-07
 side: software
 featured: true
 order: 1
-tags: ["Python","NumPy","SciPy","LiDAR","ICP"]
-repo: "https://github.com/JeyaVardhan-L/Baseline_tests_for_AutoNav"
+tags: ["Python", "GICP", "small_gicp", "LiDAR", "Benchmarking"]
+repo: "https://github.com/JeyaVardhan-L/lidar-compute-sizing"
 cover: ./cover.png
-demo: "https://jeyavardhan-l.github.io/Baseline_tests_for_AutoNav/"
+demo: "https://jeyavardhan-l.github.io/lidar-compute-sizing/"
 specs:
-  - { label: "Dataset", value: "Newer College, Ouster OS1-64" }
-  - { label: "Deadline", value: "100 ms per scan (10 Hz)" }
-  - { label: "Method", value: "voxel downsampling + KD-tree ICP" }
-  - { label: "Reported", value: "P50 / P95 / P99 latency" }
-  - { label: "Tests", value: "35" }
-  - { label: "Result", value: "Median 750 ms on a laptop; the 100 ms deadline is missed" }
+  - { label: "Runs", value: "168 measured" }
+  - { label: "Compiled vs Python", value: "14.5 ms vs 170 ms per scan (11.7×)" }
+  - { label: "Sensor", value: "about 655 k points/s (64 beams at 10 Hz)" }
+  - { label: "Compute", value: "4 N100-class cores, 40 ms at P99" }
+  - { label: "Tests", value: "86" }
 ---
 
-## Overview
+A robot that localises with LiDAR odometry must finish each scan before the next
+one arrives (100 ms at 10 Hz) and still leave time for mapping, planning and
+control. This project measures what that takes: how many points the sensor must
+deliver, how much CPU that costs, and where the method stops working. Every
+number on the results site is read from a run record and tagged MEASURED,
+DERIVED, EMULATED or ASSUMED.
 
-The **Autonomous Navigation Baseline Research Pipeline** is an empirical, evidence-based software pipeline supporting an autonomous-navigation feasibility investigation for an autonomous robotics challenge. 
+## How it works
 
-Using authentic, publicly available multi-sensor recordings from the **Newer College (Oxford)** dataset, this project quantifies the computational complexity, registration latency, and algorithmic limitations of baseline 3D LiDAR odometry under severe real-world constraints.
+- **Real data.** Newer College 2020 (OS1-64) and 2021 (OS0-128) and Oxford
+  Spires. A ROS-bag reader fetches only the chunks of a 30 s window over HTTP
+  range requests, about 1.2 GB of a 10 GB recording.
+- **Cheaper sensors from one real scan.** Dropping beam rows, columns or frames
+  emulates 64, 32 and 16 beams, VLP-16- and Mid-360-like point budgets, and 5 Hz.
+- **Five implementations, one frame loop.** Python ICP (plain and tuned), Python
+  point-to-plane, and compiled ICP and GICP (small_gicp) share the same validity
+  check, pose convention and timer.
+- **Pinned compute tiers.** One or four performance or efficiency cores, plus
+  ARM and x86 cloud runners. Every run records CPU, governor, power state,
+  background load and commit.
+- **Rules before results.** "Keeps up" means P99 ≤ 50% of the frame period;
+  "accurate" means ≤ 2% drift per 10 m. Both were written down before the
+  campaign.
 
-- **Primary Language**: Python (NumPy, SciPy, Matplotlib)
-- **Automated Tests**: 35 passing unit tests
-- **Budget**: $0 hardware testbed evaluating companion computer limits before physical procurement
+## What I found
 
----
+- **The language decided the first verdict, not the algorithm.** The same ICP
+  in compiled code takes 14.5 ms per scan instead of 170 ms in Python.
+- **GICP is the method to run:** 16.5 ms median and 0.08 m position error over
+  22.5 m (Python ICP: 0.51 m).
+- **Sensor and computer:** about 655 k points/s (64 beams at 10 Hz) on four
+  N100-class cores, 40 ms per scan at P99 on the hardest motion. One core needs
+  125 ms and can't keep up.
+- **Where the method stops.** With fast turns (up to 34° between scans) every
+  sensor fails, even the full 128-beam scan. Fast-turning platforms need
+  IMU-aided odometry; more beams or cores don't fix it.
+- **Conditions matter as much as code.** The same Python code ran at 750 ms per
+  scan on Windows on a shared laptop and 170 ms on Ubuntu with a fixed governor.
 
-## The Feasibility Question
+## Limits
 
-Before procuring or building physical UAV flight hardware, companion computers (e.g., Raspberry Pi 5, Jetson Orin Nano), or 3D LiDAR sensors, teams face a foundational real-time robotics challenge:
-
-> **Can baseline LiDAR odometry algorithms process incoming 3D point-cloud frames within the sensor's physical arrival deadline (`T_period = 1 / f_sensor`, e.g., 100 ms at 10 Hz) while operating within standard host computational and memory limits?**
-
-If per-frame scan matching exceeds 100ms, the state estimation queue overflows, resulting in catastrophic latency accumulation, drift, and UAV instability.
-
----
-
-## Experimental Methodology & Pipeline
-
-```
-Authentic Sensor Recordings (Newer College Oxford PCD/BIN)
-                          │
-                          ▼
-            Voxel Grid Downsampling & Filtering
-                          │
-                          ▼
-        Iterative Closest Point (ICP) Registration
-                          │
-              ┌───────────┴───────────┐
-              ▼                       ▼
-    Computational Metrics    Navigation Accuracy
-    - Wall-clock latency     - Estimated trajectory
-    - P95 / P99 latency      - Relative pose error
-    - Memory RSS footprint   - Cumulative drift
-```
-
-### 1. Real Sensor Data Processing
-The pipeline ingests raw 3D point-cloud data from Ouster OS1-64 LiDAR sensors. It implements spatial voxel downsampling and statistical outlier removal to simulate realistic companion computer bandwidth constraints.
-
-### 2. Iterative Closest Point (ICP) Engine
-- Point-to-point and point-to-plane registration algorithms implemented with vectorized NumPy operations and SciPy KD-trees.
-- Calculates rigid body 6-DoF transformations (`R in SO(3)`, `t in R^3`) between sequential point clouds.
-- Evaluates convergence criteria, residual root-mean-square errors (RMSE), and condition numbers.
-
-### 3. Computational Benchmark Metrics
-- **Per-Frame Registration Latency**: High-resolution wall-clock duration to align consecutive 3D scans.
-- **Distribution Analysis**: Empirical Mean, Median, 95th percentile (P95), 99th percentile (P99), and Maximum latency.
-- **Deadline Violation Rate**: Percentage of frames exceeding the critical 100ms processing threshold at 10Hz.
-
----
-
-## Key Experimental Findings
-
-1. **Downsampling is Non-Negotiable**: Without aggressive voxel grid filtering (`leaf_size >= 0.2m`), raw 64-beam scans (~65,000 points) require >450ms per frame on standard CPU architectures, missing the 10Hz sensor deadline by over 350%.
-2. **KD-Tree Acceleration**: Spatial partitioning reduces nearest-neighbor correspondence search from $O(N^2)$ to $O(N \log N)$, bringing median per-frame latency down to ~72ms on filtered point clouds.
-3. **Hardware Implications**: Identified that single-threaded companion computers (like Raspberry Pi 4) require hardware-accelerated KD-tree search or GPU-backed scan matching to reliably maintain 10Hz odometry during aggressive flight maneuvers.
-
----
-
-## Verification & Status
-
-- **Status**: Implemented & verified.
-- **Automated Tests**: 35 unit tests validating spatial transformations, voxel grid binning, nearest-neighbor query correctness, and latency profiler instrumentation.
-- **Reproducibility**: Includes explicit setup scripts and dataset extraction utilities.
+Handheld recordings stand in for a moving platform. It is scan-to-scan odometry
+only: no IMU, no map, no loop closure. Boards I didn't measure (Raspberry Pi 5,
+Jetson Orin, RK3588) are projections, tagged as such.

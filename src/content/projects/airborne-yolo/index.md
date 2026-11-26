@@ -4,7 +4,7 @@ summary: "A YOLO11 detector that tells aircraft, birds and drones apart in sky i
 date: 2026-11-10
 side: software
 featured: false
-order: 8
+order: 11
 tags: ["Python", "PyTorch", "YOLO11", "Computer vision"]
 repo: "https://github.com/JeyaVardhan-L/Train-YOLO-with-custom-Dataset"
 cover: ./cover.png

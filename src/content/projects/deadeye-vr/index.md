@@ -4,7 +4,7 @@ summary: "A marksman simulator for Meta Quest 2 with bullet ballistics and scope
 date: 2026-11-04
 side: software
 featured: false
-order: 11
+order: 14
 tags: ["Unity 6","C#","OpenXR","Quest 2"]
 repo: "https://github.com/JeyaVardhan-L/DEADeyeVR"
 cover: ./cover.png

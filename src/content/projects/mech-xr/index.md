@@ -4,7 +4,7 @@ summary: "An Android AR app that puts gearboxes and differentials on your desk a
 date: 2026-11-05
 side: software
 featured: false
-order: 10
+order: 13
 tags: ["Unity 6","C#","ARCore","Android"]
 repo: "https://github.com/JeyaVardhan-L/AR_Gear_Mechanisms"
 cover: ./cover.png

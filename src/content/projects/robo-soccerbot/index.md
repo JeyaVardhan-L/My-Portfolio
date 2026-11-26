@@ -4,7 +4,7 @@ summary: "A four-wheel-drive competition robot driven by an Arduino, two 43 A mo
 date: 2026-02-27
 side: hardware
 featured: false
-order: 6
+order: 9
 tags: ["Arduino","C++","Motor drivers","RF"]
 repo: "https://github.com/JeyaVardhan-L/Robo_Soccerbot"
 cover: ./cover.png

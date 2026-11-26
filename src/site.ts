@@ -14,7 +14,8 @@ export const SITE = {
   // A short line shown small at the bottom of the home page hero.
   now: 'Learning how transformers work',
 
-  email: '',
+  email: 'jeyastrophysics@gmail.com',
+  phone: '+91 81068 33178', // shown as written; the call link uses the digits
   github: 'https://github.com/JeyaVardhan-L',
   linkedin: '',
   resume: '', // e.g. '/resume.pdf' after adding public/resume.pdf

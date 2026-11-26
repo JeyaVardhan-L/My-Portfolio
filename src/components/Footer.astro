@@ -5,8 +5,10 @@ import footerArt from '../assets/art/footer.jpg';
 import { SITE } from '../site';
 import { url } from '../lib/site';
 
+const tel = SITE.phone ? `tel:${SITE.phone.replace(/[^\d+]/g, '')}` : '';
 const actions = [
   SITE.email ? { label: SITE.email, href: `mailto:${SITE.email}` } : { label: 'Write to me on GitHub', href: SITE.github },
+  SITE.phone && { label: SITE.phone, href: tel, ghost: true },
   SITE.resume && { label: 'Résumé', href: url(SITE.resume), ghost: true },
 ].filter(Boolean) as { label: string; href: string; ghost?: boolean }[];
 
@@ -18,6 +20,7 @@ const pages = [
 ];
 const elsewhere = [
   SITE.email && { label: 'Email', href: `mailto:${SITE.email}` },
+  SITE.phone && { label: 'Phone', href: tel },
   { label: 'GitHub', href: SITE.github },
   SITE.linkedin && { label: 'LinkedIn', href: SITE.linkedin },
   { label: 'RSS', href: url('/rss.xml') },

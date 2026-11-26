@@ -20,11 +20,6 @@ const { items } = Astro.props;
           </span>
           <span class="wr-side">
             <span class="label wr-read">{readMinutes(p.body)} min</span>
-            <span class="wr-lights" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-            </span>
           </span>
         </a>
       </li>
@@ -78,49 +73,16 @@ const { items } = Astro.props;
   }
 
   .wr-side {
-    position: relative;
     justify-self: end;
   }
 
   .wr-read {
-    transition: opacity 0.3s;
+    transition: color 0.3s;
   }
 
-  .wr-lights {
-    position: absolute;
-    right: 0;
-    top: 3px;
-    display: flex;
-    gap: 5px;
-  }
-
-  .wr-lights i {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: #ff5f57;
-    opacity: 0;
-    transform: scale(0.4);
-    transition: opacity 0.3s, transform 0.45s var(--ease);
-  }
-
-  .wr-lights i:nth-child(2) {
-    background: #febc2e;
-    transition-delay: 0.04s;
-  }
-
-  .wr-lights i:nth-child(3) {
-    background: #28c840;
-    transition-delay: 0.08s;
-  }
-
-  .wr a:hover .wr-read {
-    opacity: 0;
-  }
-
-  .wr a:hover .wr-lights i {
-    opacity: 1;
-    transform: none;
+  .wr a:hover .wr-read,
+  .wr a:hover .wr-title {
+    color: var(--blue);
   }
 
   @media (max-width: 720px) {
